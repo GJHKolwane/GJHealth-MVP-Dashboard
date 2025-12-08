@@ -1,28 +1,20 @@
-import React, { useState } from 'react'
-import LoginPage from './pages/LoginPage'
-import DashboardPage from './pages/DashboardPage'
-import Layout from './components/Layout'
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import LoginPage from "./pages/LoginPage";
+import DashboardPage from "./pages/DashboardPage";
+import Pagesholder from "./pages/Pagesholder";
 
-function App() {
-  const [user, setUser] = useState(null)
-
-  const handleLoginSuccess = (userInfo) => {
-    setUser(userInfo)
-  }
-
-  const handleLogout = () => {
-    setUser(null)
-  }
-
+const App = () => {
   return (
-    <Layout user={user} onLogout={handleLogout}>
-      {user ? (
-        <DashboardPage user={user} />
-      ) : (
-        <LoginPage onLoginSuccess={handleLoginSuccess} />
-      )}
-    </Layout>
-  )
-}
+      <BrowserRouter>
+            <Routes>
+                    <Route path="/" element={<LoginPage />} />
+                            <Route path="/dashboard" element={<DashboardPage />} />
+                                    <Route path="/patients" element={<Pagesholder />} />
+                                            <Route path="/settings" element={<Pagesholder />} />
+                                                  </Routes>
+                                                      </BrowserRouter>
+                                                        );
+                                                        };
 
-export default App
+                                                        export default App;

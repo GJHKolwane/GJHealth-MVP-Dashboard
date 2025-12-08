@@ -1,29 +1,28 @@
-import React from 'react'
+import React from "react";
+import Header from "./Header";
+import Sidebar from "./Sidebar";
 
-function Layout({ user, onLogout, children }) {
+const Layout = ({ children }) => {
   return (
-    <div className="app-shell">
-      <header className="app-header">
-        <div className="app-title">
-          GJHealth <span>MVP Dashboard</span>
-        </div>
-        <div>
-          {user ? (
-            <button className="logout-button" onClick={onLogout}>
-              <span>●</span>
-              <span>Logout</span>
-            </button>
-          ) : (
-            <span className="badge">
-              <span>●</span>
-              <span>Demo mode</span>
-            </span>
-          )}
-        </div>
-      </header>
-      <main className="app-main">{children}</main>
-    </div>
-  )
-}
+      <div style={{ display: "flex" }}>
+            <Header />
 
-export default Layout
+                  <Sidebar />
+
+                        <main
+                                style={{
+                                          marginTop: "60px",
+                                                    marginLeft: "230px",
+                                                              padding: "1.5rem",
+                                                                        width: "100%",
+                                                                                  minHeight: "100vh",
+                                                                                            backgroundColor: "#f4f7fb",
+                                                                                                    }}
+                                                                                                          >
+                                                                                                                  {children}
+                                                                                                                        </main>
+                                                                                                                            </div>
+                                                                                                                              );
+                                                                                                                              };
+
+                                                                                                                              export default Layout;

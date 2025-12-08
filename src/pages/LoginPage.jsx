@@ -1,86 +1,69 @@
-import React, { useState } from 'react'
-import { sendAuthRequest } from '../services/api'
-import LoadingSpinner from '../components/LoadingSpinner'
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-function LoginPage({ onLoginSuccess }) {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+const LoginPage = () => {
+  const navigate = useNavigate();
+    const [email, setEmail] = useState("");
+      const [password, setPassword] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
+        const handleLogin = (e) => {
+            e.preventDefault();
+                navigate("/dashboard");
+                  };
 
-    try {
-      const payload = { username, password }
-      const result = await sendAuthRequest(payload)
+                    return (
+                        <div style={{ 
+                              height: "100vh", 
+                                    display: "flex", 
+                                          justifyContent: "center", 
+                                                alignItems: "center",
+                                                      background: "#e2e8f0"
+                                                          }}>
+                                                                <form 
+                                                                        onSubmit={handleLogin}
+                                                                                style={{
+                                                                                          width: "350px",
+                                                                                                    background: "white",
+                                                                                                              padding: "30px",
+                                                                                                                        borderRadius: "10px",
+                                                                                                                                  boxShadow: "0 2px 6px rgba(0,0,0,0.1)"
+                                                                                                                                          }}
+                                                                                                                                                >
+                                                                                                                                                        <h2 style={{ textAlign: "center" }}>Login</h2>
 
-      const userInfo = {
-        username,
-        token: result?.token || null,
-      }
+                                                                                                                                                                <label>Email</label>
+                                                                                                                                                                        <input
+                                                                                                                                                                                  type="email"
+                                                                                                                                                                                            style={{ width: "100%", padding: "10px", marginBottom: "15px" }}
+                                                                                                                                                                                                      value={email}
+                                                                                                                                                                                                                onChange={(e) => setEmail(e.target.value)}
+                                                                                                                                                                                                                        />
 
-      onLoginSuccess(userInfo)
-    } catch (err) {
-      console.error(err)
-      setError(err.message || 'Login failed. Please try again.')
-    } finally {
-      setLoading(false)
-    }
-  }
+                                                                                                                                                                                                                                <label>Password</label>
+                                                                                                                                                                                                                                        <input
+                                                                                                                                                                                                                                                  type="password"
+                                                                                                                                                                                                                                                            style={{ width: "100%", padding: "10px", marginBottom: "15px" }}
+                                                                                                                                                                                                                                                                      value={password}
+                                                                                                                                                                                                                                                                                onChange={(e) => setPassword(e.target.value)}
+                                                                                                                                                                                                                                                                                        />
 
-  return (
-    <div className="card">
-      <div className="card-header">
-        <p className="card-title">Log in to GJHealth</p>
-        <p className="card-subtitle">
-          Use any demo username &amp; password while the real auth Lambda is being wired.
-        </p>
-      </div>
+                                                                                                                                                                                                                                                                                                <button 
+                                                                                                                                                                                                                                                                                                          type="submit"
+                                                                                                                                                                                                                                                                                                                    style={{
+                                                                                                                                                                                                                                                                                                                                width: "100%",
+                                                                                                                                                                                                                                                                                                                                            padding: "12px",
+                                                                                                                                                                                                                                                                                                                                                        background: "#1e293b",
+                                                                                                                                                                                                                                                                                                                                                                    color: "white",
+                                                                                                                                                                                                                                                                                                                                                                                border: "none",
+                                                                                                                                                                                                                                                                                                                                                                                            borderRadius: "5px",
+                                                                                                                                                                                                                                                                                                                                                                                                        cursor: "pointer"
+                                                                                                                                                                                                                                                                                                                                                                                                                  }}
+                                                                                                                                                                                                                                                                                                                                                                                                                          >
+                                                                                                                                                                                                                                                                                                                                                                                                                                    Login
+                                                                                                                                                                                                                                                                                                                                                                                                                                            </button>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                  </form>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                      </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                        );
+                                                                                                                                                                                                                                                                                                                                                                                                                                                        };
 
-      <form onSubmit={handleSubmit}>
-        <div className="field">
-          <label htmlFor="username">Username</label>
-          <input
-            id="username"
-            autoComplete="username"
-            placeholder="demo.clinician@gjhealth"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
-
-        <div className="field">
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            autoComplete="current-password"
-            placeholder="••••••••"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-
-        <button className="button" type="submit" disabled={loading}>
-          {loading ? 'Logging in…' : 'Enter dashboard'}
-        </button>
-
-        {loading && <LoadingSpinner />}
-
-        {error && <div className="error">{error}</div>}
-
-        <p className="helper">
-          <strong>MVP note:</strong> This screen is only validating the API connection. Later we plug
-          in full IAM + JWT auth for hospitals and national users.
-        </p>
-      </form>
-    </div>
-  )
-}
-
-export default LoginPage
+                                                                                                                                                                                                                                                                                                                                                                                                                                                        export default LoginPage;

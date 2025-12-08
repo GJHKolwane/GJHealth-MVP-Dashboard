@@ -1,41 +1,39 @@
-import React from 'react'
+import React from "react";
+import Sidebar from "../components/Sidebar";
+import Header from "../components/Header";
 
-function DashboardPage({ user }) {
+const DashboardPage = () => {
   return (
-    <div className="card">
-      <div className="card-header">
-        <p className="card-title">Welcome, {user?.username || 'Clinician'}</p>
-        <p className="card-subtitle">
-          GJHealth core APIs are ready. This view will eventually show live triage, SOAN summaries
-          and patient journeys.
-        </p>
-      </div>
+      <div className="app-container">
+            <Sidebar />
 
-      <div className="dashboard-grid">
-        <div className="metric-row">
-          <span>AI Orchestrator</span>
-          <span>Online · v1 MVP</span>
-        </div>
-        <div className="metric-row">
-          <span>Triage engine</span>
-          <span>Connected to /triage</span>
-        </div>
-        <div className="metric-row">
-          <span>Speech &amp; Vision</span>
-          <span>Configured via /speech + /vision</span>
-        </div>
-        <div className="metric-row">
-          <span>FHIR / DICOM bridge</span>
-          <span>Wired from AWS → Azure (next)</span>
-        </div>
-      </div>
+                  <div className="dashboard-container">
+                          <Header />
 
-      <p className="helper">
-        This is the <strong>first visible home</strong> of GJHealth. Once investors / ministries log
-        in here and see the triage flow end‑to‑end, we&apos;ve done our job for the MVP.
-      </p>
-    </div>
-  )
-}
+                                  <div className="cards">
+                                            <div className="card">
+                                                        <h3>Total Patients</h3>
+                                                                    <p>124</p>
+                                                                              </div>
 
-export default DashboardPage
+                                                                                        <div className="card">
+                                                                                                    <h3>Today's Consultations</h3>
+                                                                                                                <p>16</p>
+                                                                                                                          </div>
+
+                                                                                                                                    <div className="card">
+                                                                                                                                                <h3>Alerts</h3>
+                                                                                                                                                            <p>3</p>
+                                                                                                                                                                      </div>
+
+                                                                                                                                                                                <div className="card">
+                                                                                                                                                                                            <h3>Pending Reviews</h3>
+                                                                                                                                                                                                        <p>7</p>
+                                                                                                                                                                                                                  </div>
+                                                                                                                                                                                                                          </div>
+                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                      );
+                                                                                                                                                                                                                                      };
+
+                                                                                                                                                                                                                                      export default DashboardPage;
