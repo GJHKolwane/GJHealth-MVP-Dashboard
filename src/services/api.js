@@ -1,48 +1,47 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+// src/api.js
 
-async function postRequest(endpoint, data) {
-  if (!API_BASE_URL) {
-    throw new Error('API base URL is not configured. Set VITE_API_BASE_URL in your .env.')
-  }
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  })
+export async function authenticateUser(username, password) {
+  try {
+      const response = await fetch(`${API_BASE_URL}/auth`, {
+            method: "POST",
+                  headers: {
+                          "Content-Type": "application/json"
+                                },
+                                      body: JSON.stringify({ username, password })
+                                          });
 
-  const payload = await response.json().catch(() => ({}))
+                                              if (!response.ok) {
+                                                    const errorText = await response.text();
+                                                          throw new Error(`Auth failed: ${errorText}`);
+                                                              }
 
-  if (!response.ok) {
-    const message = payload?.message || payload?.error || 'Unexpected error from API.'
-    throw new Error(message)
-  }
+                                                                  return await response.json();
+                                                                    } catch (error) {
+                                                                        console.error("Authentication error:", error);
+                                                                            throw error;
+                                                                              }
+                                                                              }
 
-  return payload
-}
+                                                                              export async function processTriage(data) {
+                                                                                try {
+                                                                                    const response = await fetch(`${API_BASE_URL}/triage`, {
+                                                                                          method: "POST",
+                                                                                                headers: {
+                                                                                                        "Content-Type": "application/json"
+                                                                                                              },
+                                                                                                                    body: JSON.stringify(data)
+                                                                                                                        });
 
-export function sendAuthRequest(credentials) {
-  return postRequest('/auth', credentials)
-}
+                                                                                                                            if (!response.ok) {
+                                                                                                                                  const errorText = await response.text();
+                                                                                                                                        throw new Error(`Triage failed: ${errorText}`);
+                                                                                                                                            }
 
-export function sendTriageRequest(payload) {
-  return postRequest('/triage', payload)
-}
-
-export function sendVisionRequest(payload) {
-  return postRequest('/vision', payload)
-}
-
-export function sendSpeechRequest(payload) {
-  return postRequest('/speech', payload)
-}
-
-export function sendAiRequest(payload) {
-  return postRequest('/ai', payload)
-}
-
-export function sendOrchestratorRequest(payload) {
-  return postRequest('/orchestrator', payload)
-}
+                                                                                                                                                return await response.json();
+                                                                                                                                                  } catch (error) {
+                                                                                                                                                      console.error("Triage error:", error);
+                                                                                                                                                          throw error;
+                                                                                                                                                            }
+                                                                                                                                                            }
