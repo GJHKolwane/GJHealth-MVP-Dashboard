@@ -1,8 +1,10 @@
+"use client";
+
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  const navigate = useNavigate();
+  const router = useRouter();
 
     const [username, setUsername] = useState("");
       const [password, setPassword] = useState("");
@@ -14,10 +16,10 @@ export default function LoginPage() {
                     setError("");
                         setLoading(true);
 
-                            // Temporary login logic (Option A)
+                            // Temporary login (Option A)
                                 if (username === "admin" && password === "admin") {
                                       setLoading(false);
-                                            navigate("/dashboard");
+                                            router.push("/dashboard");
                                                   return;
                                                       }
 
