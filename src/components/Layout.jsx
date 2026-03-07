@@ -4,25 +4,29 @@ import Sidebar from "./Sidebar";
 
 const Layout = ({ children }) => {
   return (
-      <div style={{ display: "flex" }}>
+      <div>
+
             <Header />
 
-                  <Sidebar />
+                  <div style={{ display: "flex" }}>
+                          
+                                  <Sidebar />
 
-                        <main
-                                style={{
-                                          marginTop: "60px",
-                                                    marginLeft: "230px",
-                                                              padding: "1.5rem",
-                                                                        width: "100%",
-                                                                                  minHeight: "100vh",
-                                                                                            backgroundColor: "#f4f7fb",
-                                                                                                    }}
-                                                                                                          >
-                                                                                                                  {children}
-                                                                                                                        </main>
-                                                                                                                            </div>
-                                                                                                                              );
-                                                                                                                              };
+                                          <main
+                                                    style={{
+                                                                flex: 1,
+                                                                            padding: "20px",
+                                                                                        backgroundColor: "#f4f7fb",
+                                                                                                    minHeight: "100vh"
+                                                                                                              }}
+                                                                                                                      >
+                                                                                                                                {children}
+                                                                                                                                        </main>
 
-                                                                                                                              export default Layout;
+                                                                                                                                              </div>
+
+                                                                                                                                                  </div>
+                                                                                                                                                    );
+                                                                                                                                                    };
+
+                                                                                                                                                    export default Layout;

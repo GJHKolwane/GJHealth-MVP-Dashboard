@@ -1,10 +1,9 @@
-"use client";
-
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
-  const router = useRouter();
+
+  const navigate = useNavigate();
 
     const [username, setUsername] = useState("");
       const [password, setPassword] = useState("");
@@ -12,14 +11,19 @@ export default function LoginPage() {
           const [error, setError] = useState("");
 
             const handleLogin = async (e) => {
+
                 e.preventDefault();
                     setError("");
                         setLoading(true);
 
-                            // Temporary login (Option A)
+                            // Temporary demo login
+
                                 if (username === "admin" && password === "admin") {
+
                                       setLoading(false);
-                                            router.push("/dashboard");
+
+                                            navigate("/dashboard");
+
                                                   return;
                                                       }
 
@@ -29,10 +33,13 @@ export default function LoginPage() {
 
                                                                   return (
                                                                       <div style={styles.container}>
+
                                                                             <div style={styles.card}>
-                                                                                    <h2 style={styles.title}>Login</h2>
+
+                                                                                    <h2 style={styles.title}>GJHealth Login</h2>
 
                                                                                             <form onSubmit={handleLogin} style={styles.form}>
+
                                                                                                       <input
                                                                                                                   type="text"
                                                                                                                               placeholder="Username"
@@ -54,13 +61,17 @@ export default function LoginPage() {
                                                                                                                                                                                                                                                                                 <button type="submit" style={styles.button} disabled={loading}>
                                                                                                                                                                                                                                                                                             {loading ? "Logging in..." : "Login"}
                                                                                                                                                                                                                                                                                                       </button>
+
                                                                                                                                                                                                                                                                                                               </form>
+
                                                                                                                                                                                                                                                                                                                     </div>
+
                                                                                                                                                                                                                                                                                                                         </div>
                                                                                                                                                                                                                                                                                                                           );
                                                                                                                                                                                                                                                                                                                           }
 
                                                                                                                                                                                                                                                                                                                           const styles = {
+
                                                                                                                                                                                                                                                                                                                             container: {
                                                                                                                                                                                                                                                                                                                                 height: "100vh",
                                                                                                                                                                                                                                                                                                                                     display: "flex",
@@ -68,6 +79,7 @@ export default function LoginPage() {
                                                                                                                                                                                                                                                                                                                                             alignItems: "center",
                                                                                                                                                                                                                                                                                                                                                 backgroundColor: "#f4f4f4",
                                                                                                                                                                                                                                                                                                                                                   },
+
                                                                                                                                                                                                                                                                                                                                                     card: {
                                                                                                                                                                                                                                                                                                                                                         width: "360px",
                                                                                                                                                                                                                                                                                                                                                             padding: "30px",
@@ -75,28 +87,33 @@ export default function LoginPage() {
                                                                                                                                                                                                                                                                                                                                                                     borderRadius: "10px",
                                                                                                                                                                                                                                                                                                                                                                         boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
                                                                                                                                                                                                                                                                                                                                                                           },
+
                                                                                                                                                                                                                                                                                                                                                                             title: {
                                                                                                                                                                                                                                                                                                                                                                                 textAlign: "center",
                                                                                                                                                                                                                                                                                                                                                                                     marginBottom: "20px",
                                                                                                                                                                                                                                                                                                                                                                                       },
+
                                                                                                                                                                                                                                                                                                                                                                                         form: {
                                                                                                                                                                                                                                                                                                                                                                                             display: "flex",
                                                                                                                                                                                                                                                                                                                                                                                                 flexDirection: "column",
                                                                                                                                                                                                                                                                                                                                                                                                   },
+
                                                                                                                                                                                                                                                                                                                                                                                                     input: {
                                                                                                                                                                                                                                                                                                                                                                                                         padding: "12px",
                                                                                                                                                                                                                                                                                                                                                                                                             marginBottom: "15px",
                                                                                                                                                                                                                                                                                                                                                                                                                 borderRadius: "6px",
                                                                                                                                                                                                                                                                                                                                                                                                                     border: "1px solid #ccc",
                                                                                                                                                                                                                                                                                                                                                                                                                       },
+
                                                                                                                                                                                                                                                                                                                                                                                                                         button: {
                                                                                                                                                                                                                                                                                                                                                                                                                             padding: "12px",
-                                                                                                                                                                                                                                                                                                                                                                                                                                backgroundColor: "#0070f3",
+                                                                                                                                                                                                                                                                                                                                                                                                                                backgroundColor: "#0b74c4",
                                                                                                                                                                                                                                                                                                                                                                                                                                     color: "white",
                                                                                                                                                                                                                                                                                                                                                                                                                                         border: "none",
                                                                                                                                                                                                                                                                                                                                                                                                                                             borderRadius: "6px",
                                                                                                                                                                                                                                                                                                                                                                                                                                                 cursor: "pointer",
                                                                                                                                                                                                                                                                                                                                                                                                                                                   },
+
                                                                                                                                                                                                                                                                                                                                                                                                                                                     error: {
                                                                                                                                                                                                                                                                                                                                                                                                                                                         color: "red",
                                                                                                                                                                                                                                                                                                                                                                                                                                                             marginBottom: "10px",

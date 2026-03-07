@@ -4,67 +4,72 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import Pagesholder from "./pages/Pagesholder";
-import ClinicalCasePage from "./pages/ClinicalCasePage";
+import ClinicalDashboard from "./pages/ClinicalDashboard";
+import MedicineDashboard from "./pages/MedicineDashboard";
 
 import Layout from "./components/Layout";
 
 function App() {
-
   return (
+      <BrowserRouter>
+            <Routes>
 
-    <BrowserRouter>
+                    {/* Login */}
+                            <Route path="/" element={<LoginPage />} />
 
-      <Routes>
+                                    {/* Dashboard */}
+                                            <Route
+                                                      path="/dashboard"
+                                                                element={
+                                                                            <Layout>
+                                                                                          <DashboardPage />
+                                                                                                      </Layout>
+                                                                                                                }
+                                                                                                                        />
 
-        {/* Login */}
-        <Route path="/" element={<LoginPage />} />
+                                                                                                                                {/* Clinical */}
+                                                                                                                                        <Route
+                                                                                                                                                  path="/clinical"
+                                                                                                                                                            element={
+                                                                                                                                                                        <Layout>
+                                                                                                                                                                                      <ClinicalDashboard />
+                                                                                                                                                                                                  </Layout>
+                                                                                                                                                                                                            }
+                                                                                                                                                                                                                    />
 
-        {/* Dashboard */}
-        <Route
-          path="/dashboard"
-          element={
-            <Layout>
-              <DashboardPage />
-            </Layout>
-          }
-        />
+                                                                                                                                                                                                                            {/* Medicine */}
+                                                                                                                                                                                                                                    <Route
+                                                                                                                                                                                                                                              path="/medicine"
+                                                                                                                                                                                                                                                        element={
+                                                                                                                                                                                                                                                                    <Layout>
+                                                                                                                                                                                                                                                                                  <MedicineDashboard />
+                                                                                                                                                                                                                                                                                              </Layout>
+                                                                                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                                                                                                />
 
-        {/* Clinical AI */}
-        <Route
-          path="/clinical"
-          element={
-            <Layout>
-              <ClinicalCasePage />
-            </Layout>
-          }
-        />
+                                                                                                                                                                                                                                                                                                                        {/* Patients */}
+                                                                                                                                                                                                                                                                                                                                <Route
+                                                                                                                                                                                                                                                                                                                                          path="/patients"
+                                                                                                                                                                                                                                                                                                                                                    element={
+                                                                                                                                                                                                                                                                                                                                                                <Layout>
+                                                                                                                                                                                                                                                                                                                                                                              <Pagesholder title="Patients" />
+                                                                                                                                                                                                                                                                                                                                                                                          </Layout>
+                                                                                                                                                                                                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                                                                                                                                                                                                            />
 
-        {/* Patients */}
-        <Route
-          path="/patients"
-          element={
-            <Layout>
-              <Pagesholder title="Patients" />
-            </Layout>
-          }
-        />
+                                                                                                                                                                                                                                                                                                                                                                                                                    {/* Settings */}
+                                                                                                                                                                                                                                                                                                                                                                                                                            <Route
+                                                                                                                                                                                                                                                                                                                                                                                                                                      path="/settings"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                element={
+                                                                                                                                                                                                                                                                                                                                                                                                                                                            <Layout>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                          <Pagesholder title="Settings" />
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      </Layout>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        />
 
-        {/* Settings */}
-        <Route
-          path="/settings"
-          element={
-            <Layout>
-              <Pagesholder title="Settings" />
-            </Layout>
-          }
-        />
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              </Routes>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </BrowserRouter>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    );
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
 
-      </Routes>
-
-    </BrowserRouter>
-
-  );
-
-}
-
-export default App;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    export default App;
