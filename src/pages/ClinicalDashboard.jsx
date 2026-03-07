@@ -17,21 +17,36 @@ const ClinicalDashboard = () => {
   const [prescription, setPrescription] = useState("");
   const [caseClosed, setCaseClosed] = useState(false);
 
+  // 🔵 AI TRIAGE CALL
   const runAITriage = async () => {
 
     try {
 
       const payload = {
-        patientId,
-        allergies,
-        symptoms,
-        vitals,
-        nurseNotes
+
+        consultationId: `CONS-${Date.now()}`,
+
+        patient: {
+          id: patientId,
+          allergies: allergies ? [allergies] : []
+        },
+
+        nurse: {
+          id: "NURSE-DEMO",
+          name: "Clinic Nurse"
+        },
+
+        context: {
+          symptoms: symptoms,
+          vitals: vitals,
+          notes: nurseNotes
+        }
+
       };
 
       const result = await runClinicalTriage(payload);
 
-      setTriageResult(result);
+      setTriageResult(result.triage);
 
     } catch (error) {
 
@@ -47,6 +62,7 @@ const ClinicalDashboard = () => {
 
   };
 
+  // 🧠 Generate SOAN
   const generateSOAN = () => {
 
     const soanReport = {
@@ -60,6 +76,7 @@ const ClinicalDashboard = () => {
 
   };
 
+  // ✅ Close Case
   const closeCase = () => {
     setCaseClosed(true);
   };
@@ -83,7 +100,7 @@ const ClinicalDashboard = () => {
 
           <h2>Clinical AI Workflow</h2>
 
-          {/* Patient Identification */}
+          {/* PATIENT IDENTIFICATION */}
 
           <div className="card">
 
@@ -98,7 +115,7 @@ const ClinicalDashboard = () => {
 
           </div>
 
-          {/* Allergy Safety */}
+          {/* ALLERGIES */}
 
           <div className="card">
 
@@ -113,7 +130,7 @@ const ClinicalDashboard = () => {
 
           </div>
 
-          {/* Nurse Assessment */}
+          {/* NURSE ASSESSMENT */}
 
           <div className="card">
 
@@ -156,7 +173,7 @@ const ClinicalDashboard = () => {
 
           </div>
 
-          {/* AI TRIAGE RESULT */}
+          {/* TRIAGE RESULT */}
 
           {triageResult && (
 
@@ -185,7 +202,7 @@ const ClinicalDashboard = () => {
 
           )}
 
-          {/* SOAN */}
+          {/* SOAN REPORT */}
 
           {soan && (
 
@@ -202,7 +219,7 @@ const ClinicalDashboard = () => {
 
           )}
 
-          {/* Doctor Review */}
+          {/* DOCTOR REVIEW */}
 
           {soan && (
 
@@ -221,7 +238,7 @@ const ClinicalDashboard = () => {
 
           )}
 
-          {/* Prescription */}
+          {/* PRESCRIPTION */}
 
           {soan && (
 
@@ -258,7 +275,7 @@ const ClinicalDashboard = () => {
 
           )}
 
-          {/* Case Closed */}
+          {/* CASE CLOSED */}
 
           {caseClosed && (
 
