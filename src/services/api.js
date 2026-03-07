@@ -1,49 +1,17 @@
-// api.js (React Vite version)
+const API_BASE = "http://localhost:8080"; 
+// later this will be API Gateway URL
 
-// Base URL pulled from Vite environment
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+export async function fetchPatients() {
+  const response = await fetch(`${API_BASE}/patients`);
+  return response.json();
+}
 
-/**
- * Login function for GJH MVP
-  * Sends POST request to AWS API Gateway /auth endpoint
-   */
-   export async function login(username, password) {
-     try {
-         const response = await fetch(`${API_BASE_URL}/auth`, {
-               method: "POST",
-                     headers: {
-                             "Content-Type": "application/json",
-                                   },
-                                         body: JSON.stringify({ username, password }),
-                                             });
+export async function fetchConsultations() {
+  const response = await fetch(`${API_BASE}/consultations`);
+  return response.json();
+}
 
-                                                 // Handle errors (non-200)
-                                                     if (!response.ok) {
-                                                           let err = {};
-                                                                 try {
-                                                                         err = await response.json();
-                                                                               } catch (_) {}
-
-                                                                                     return {
-                                                                                             success: false,
-                                                                                                     message: err.error || "Authentication failed",
-                                                                                                           };
-                                                                                                               }
-
-                                                                                                                   // Parse success payload
-                                                                                                                       const data = await response.json();
-
-                                                                                                                           return {
-                                                                                                                                 success: true,
-                                                                                                                                       token: data.token,
-                                                                                                                                             user: data.user,
-                                                                                                                                                 };
-                                                                                                                                                   } catch (error) {
-                                                                                                                                                       console.error("Login error:", error);
-
-                                                                                                                                                           return {
-                                                                                                                                                                 success: false,
-                                                                                                                                                                       message: "Network or server error",
-                                                                                                                                                                           };
-                                                                                                                                                                             }
-                                                                                                                                                                             }
+export async function fetchMedicineStock() {
+  const response = await fetch(`${API_BASE}/medicine`);
+  return response.json();
+}
