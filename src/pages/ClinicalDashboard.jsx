@@ -9,16 +9,31 @@ const ClinicalDashboard = () => {
   const [symptoms, setSymptoms] = useState("");
   const [vitals, setVitals] = useState("");
   const [nurseNotes, setNurseNotes] = useState("");
+
   const [triageResult, setTriageResult] = useState(null);
+  const [soan, setSoan] = useState(null);
+  const [doctorDecision, setDoctorDecision] = useState("");
 
   const runAITriage = () => {
 
-    // Mock AI result for MVP
     setTriageResult({
       severity: "Moderate",
       diagnosis: "Respiratory Infection",
       recommendation: "Doctor review recommended"
     });
+
+  };
+
+  const generateSOAN = () => {
+
+    const soanReport = {
+      subjective: symptoms,
+      objective: vitals,
+      assessment: triageResult?.diagnosis || "Pending",
+      nextSteps: "Doctor review recommended"
+    };
+
+    setSoan(soanReport);
 
   };
 
@@ -51,7 +66,7 @@ const ClinicalDashboard = () => {
 
           </div>
 
-          {/* Allergy Safety Check */}
+          {/* Allergy Safety */}
 
           <div className="card">
 
@@ -109,7 +124,7 @@ const ClinicalDashboard = () => {
 
           </div>
 
-          {/* AI Result */}
+          {/* AI TRIAGE RESULT */}
 
           {triageResult && (
 
@@ -120,6 +135,91 @@ const ClinicalDashboard = () => {
               <p><strong>Severity:</strong> {triageResult.severity}</p>
               <p><strong>Possible Diagnosis:</strong> {triageResult.diagnosis}</p>
               <p><strong>Recommendation:</strong> {triageResult.recommendation}</p>
+
+              <button
+                onClick={generateSOAN}
+                style={{
+                  marginTop: "10px",
+                  padding: "10px",
+                  backgroundColor: "#1f6feb",
+                  color: "white",
+                  border: "none",
+                  cursor: "pointer"
+                }}
+              >
+                Generate SOAN
+              </button>
+
+            </div>
+
+          )}
+
+          {/* SOAN REPORT */}
+
+          {soan && (
+
+            <div className="card">
+
+              <h3>SOAN Report</h3>
+
+              <p><strong>Subjective:</strong> {soan.subjective}</p>
+              <p><strong>Objective:</strong> {soan.objective}</p>
+              <p><strong>Assessment:</strong> {soan.assessment}</p>
+              <p><strong>Next Steps:</strong> {soan.nextSteps}</p>
+
+            </div>
+
+          )}
+
+          {/* DOCTOR REVIEW */}
+
+          {soan && (
+
+            <div className="card">
+
+              <h3>Doctor Review</h3>
+
+              <textarea
+                placeholder="Doctor notes / adjustments"
+                value={doctorDecision}
+                onChange={(e) => setDoctorDecision(e.target.value)}
+                style={{ width: "100%", padding: "8px", marginBottom: "10px" }}
+              />
+
+              <button
+                style={{
+                  padding: "10px",
+                  backgroundColor: "green",
+                  color: "white",
+                  border: "none",
+                  marginRight: "10px"
+                }}
+              >
+                Approve Diagnosis
+              </button>
+
+              <button
+                style={{
+                  padding: "10px",
+                  backgroundColor: "orange",
+                  color: "white",
+                  border: "none",
+                  marginRight: "10px"
+                }}
+              >
+                Re-Diagnose
+              </button>
+
+              <button
+                style={{
+                  padding: "10px",
+                  backgroundColor: "red",
+                  color: "white",
+                  border: "none"
+                }}
+              >
+                Transfer Patient
+              </button>
 
             </div>
 
