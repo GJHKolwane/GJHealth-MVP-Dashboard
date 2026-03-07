@@ -13,6 +13,8 @@ const ClinicalDashboard = () => {
   const [triageResult, setTriageResult] = useState(null);
   const [soan, setSoan] = useState(null);
   const [doctorDecision, setDoctorDecision] = useState("");
+  const [prescription, setPrescription] = useState("");
+  const [caseClosed, setCaseClosed] = useState(false);
 
   const runAITriage = () => {
 
@@ -36,6 +38,13 @@ const ClinicalDashboard = () => {
     setSoan(soanReport);
 
   };
+
+  const closeCase = () => {
+    setCaseClosed(true);
+  };
+
+  const allergyConflict = allergies && prescription &&
+    prescription.toLowerCase().includes(allergies.toLowerCase());
 
   return (
 
@@ -143,8 +152,7 @@ const ClinicalDashboard = () => {
                   padding: "10px",
                   backgroundColor: "#1f6feb",
                   color: "white",
-                  border: "none",
-                  cursor: "pointer"
+                  border: "none"
                 }}
               >
                 Generate SOAN
@@ -154,7 +162,7 @@ const ClinicalDashboard = () => {
 
           )}
 
-          {/* SOAN REPORT */}
+          {/* SOAN */}
 
           {soan && (
 
@@ -171,7 +179,7 @@ const ClinicalDashboard = () => {
 
           )}
 
-          {/* DOCTOR REVIEW */}
+          {/* Doctor Review */}
 
           {soan && (
 
@@ -180,46 +188,64 @@ const ClinicalDashboard = () => {
               <h3>Doctor Review</h3>
 
               <textarea
-                placeholder="Doctor notes / adjustments"
+                placeholder="Doctor notes"
                 value={doctorDecision}
                 onChange={(e) => setDoctorDecision(e.target.value)}
                 style={{ width: "100%", padding: "8px", marginBottom: "10px" }}
               />
 
+            </div>
+
+          )}
+
+          {/* Prescription */}
+
+          {soan && (
+
+            <div className="card">
+
+              <h3>Prescription</h3>
+
+              <input
+                placeholder="Medication + dosage"
+                value={prescription}
+                onChange={(e) => setPrescription(e.target.value)}
+                style={{ width: "100%", padding: "8px", marginBottom: "10px" }}
+              />
+
+              {allergyConflict && (
+
+                <p style={{ color: "red" }}>
+                  ⚠ Allergy Conflict Detected
+                </p>
+
+              )}
+
               <button
+                onClick={closeCase}
                 style={{
                   padding: "10px",
                   backgroundColor: "green",
                   color: "white",
-                  border: "none",
-                  marginRight: "10px"
-                }}
-              >
-                Approve Diagnosis
-              </button>
-
-              <button
-                style={{
-                  padding: "10px",
-                  backgroundColor: "orange",
-                  color: "white",
-                  border: "none",
-                  marginRight: "10px"
-                }}
-              >
-                Re-Diagnose
-              </button>
-
-              <button
-                style={{
-                  padding: "10px",
-                  backgroundColor: "red",
-                  color: "white",
                   border: "none"
                 }}
               >
-                Transfer Patient
+                Close Case
               </button>
+
+            </div>
+
+          )}
+
+          {/* Case Closed */}
+
+          {caseClosed && (
+
+            <div className="card">
+
+              <h3>Case Closed</h3>
+
+              <p>Patient case successfully completed.</p>
 
             </div>
 
