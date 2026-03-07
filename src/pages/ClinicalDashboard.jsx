@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
+import { runClinicalTriage } from "../services/clinicalApi";
 
 const ClinicalDashboard = () => {
 
@@ -16,13 +17,33 @@ const ClinicalDashboard = () => {
   const [prescription, setPrescription] = useState("");
   const [caseClosed, setCaseClosed] = useState(false);
 
-  const runAITriage = () => {
+  const runAITriage = async () => {
 
-    setTriageResult({
-      severity: "Moderate",
-      diagnosis: "Respiratory Infection",
-      recommendation: "Doctor review recommended"
-    });
+    try {
+
+      const payload = {
+        patientId,
+        allergies,
+        symptoms,
+        vitals,
+        nurseNotes
+      };
+
+      const result = await runClinicalTriage(payload);
+
+      setTriageResult(result);
+
+    } catch (error) {
+
+      console.error("AI triage failed:", error);
+
+      setTriageResult({
+        severity: "Unknown",
+        diagnosis: "AI service unavailable",
+        recommendation: "Manual doctor review required"
+      });
+
+    }
 
   };
 
@@ -43,7 +64,9 @@ const ClinicalDashboard = () => {
     setCaseClosed(true);
   };
 
-  const allergyConflict = allergies && prescription &&
+  const allergyConflict =
+    allergies &&
+    prescription &&
     prescription.toLowerCase().includes(allergies.toLowerCase());
 
   return (
@@ -214,11 +237,9 @@ const ClinicalDashboard = () => {
               />
 
               {allergyConflict && (
-
                 <p style={{ color: "red" }}>
                   ⚠ Allergy Conflict Detected
                 </p>
-
               )}
 
               <button
