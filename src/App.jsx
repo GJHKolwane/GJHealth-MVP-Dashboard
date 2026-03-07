@@ -1,50 +1,70 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import Pagesholder from "./pages/Pagesholder";
+import ClinicalCasePage from "./pages/ClinicalCasePage";
+
 import Layout from "./components/Layout";
 
 function App() {
+
   return (
-      <BrowserRouter>
-            <Routes>
 
-                    {/* Login */}
-                            <Route path="/" element={<LoginPage />} />
+    <BrowserRouter>
 
-                                    {/* Dashboard inside Layout */}
-                                            <Route
-                                                      path="/dashboard"
-                                                                element={
-                                                                            <Layout>
-                                                                                          <DashboardPage />
-                                                                                                      </Layout>
-                                                                                                                }
-                                                                                                                        />
+      <Routes>
 
-                                                                                                                                {/* Placeholder pages inside Layout */}
-                                                                                                                                        <Route
-                                                                                                                                                  path="/patients"
-                                                                                                                                                            element={
-                                                                                                                                                                        <Layout>
-                                                                                                                                                                                      <Pagesholder title="Patients" />
-                                                                                                                                                                                                  </Layout>
-                                                                                                                                                                                                            }
-                                                                                                                                                                                                                    />
+        {/* Login */}
+        <Route path="/" element={<LoginPage />} />
 
-                                                                                                                                                                                                                            <Route
-                                                                                                                                                                                                                                      path="/settings"
-                                                                                                                                                                                                                                                element={
-                                                                                                                                                                                                                                                            <Layout>
-                                                                                                                                                                                                                                                                          <Pagesholder title="Settings" />
-                                                                                                                                                                                                                                                                                      </Layout>
-                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                                        />
+        {/* Dashboard */}
+        <Route
+          path="/dashboard"
+          element={
+            <Layout>
+              <DashboardPage />
+            </Layout>
+          }
+        />
 
-                                                                                                                                                                                                                                                                                                              </Routes>
-                                                                                                                                                                                                                                                                                                                  </BrowserRouter>
-                                                                                                                                                                                                                                                                                                                    );
-                                                                                                                                                                                                                                                                                                                    }
+        {/* Clinical AI */}
+        <Route
+          path="/clinical"
+          element={
+            <Layout>
+              <ClinicalCasePage />
+            </Layout>
+          }
+        />
 
-                                                                                                                                                                                                                                                                                                                    export default App;
+        {/* Patients */}
+        <Route
+          path="/patients"
+          element={
+            <Layout>
+              <Pagesholder title="Patients" />
+            </Layout>
+          }
+        />
+
+        {/* Settings */}
+        <Route
+          path="/settings"
+          element={
+            <Layout>
+              <Pagesholder title="Settings" />
+            </Layout>
+          }
+        />
+
+      </Routes>
+
+    </BrowserRouter>
+
+  );
+
+}
+
+export default App;
