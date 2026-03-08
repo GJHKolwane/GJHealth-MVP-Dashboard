@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import ConnectionStatus from "../components/telemedicine/ConnectionStatus";
 import ConsultationChat from "../components/telemedicine/ConsultationChat";
 import AdaptiveModeManager from "../components/telemedicine/AdaptiveModeManager";
+import EscalateDoctorButton from "../components/telemedicine/EscalateDoctorButton";
 
 const TelemedicineSession = () => {
 
@@ -11,19 +12,30 @@ const TelemedicineSession = () => {
 
   const [mode, setMode] = useState("VIDEO");
 
+  const soanReport = {
+    subjective: "Patient reports fever and headache",
+    objective: "Temperature 38.4°C",
+    assessment: "Nurse + AI suggest possible infection",
+    nextSteps: "Doctor evaluation required"
+  };
+
   return (
 
     <div style={{ padding: "20px" }}>
 
       <h2>Telemedicine Consultation</h2>
 
+      {/* Connection Status */}
       <ConnectionStatus />
 
+      {/* Adaptive Mode Manager */}
       <AdaptiveModeManager onModeChange={setMode} />
 
       <p>
         Consultation ID: <strong>{consultationId}</strong>
       </p>
+
+      {/* VIDEO MODE */}
 
       {mode === "VIDEO" && (
 
@@ -35,6 +47,8 @@ const TelemedicineSession = () => {
             marginTop: "20px"
           }}
         >
+
+          {/* Patient Video */}
 
           <div
             style={{
@@ -49,6 +63,8 @@ const TelemedicineSession = () => {
           >
             Patient Video Feed
           </div>
+
+          {/* Nurse Video */}
 
           <div
             style={{
@@ -68,6 +84,8 @@ const TelemedicineSession = () => {
 
       )}
 
+      {/* AUDIO MODE */}
+
       {mode === "AUDIO" && (
 
         <div
@@ -83,6 +101,8 @@ const TelemedicineSession = () => {
         </div>
 
       )}
+
+      {/* TEXT MODE */}
 
       {mode === "TEXT" && (
 
@@ -100,15 +120,25 @@ const TelemedicineSession = () => {
 
       )}
 
+      {/* Chat Section */}
+
       <ConsultationChat />
+
+      {/* Control Buttons */}
 
       <div
         style={{
           marginTop: "25px",
           display: "flex",
-          gap: "12px"
+          gap: "12px",
+          flexWrap: "wrap"
         }}
       >
+
+        <EscalateDoctorButton
+          consultationId={consultationId}
+          soan={soanReport}
+        />
 
         <button
           style={{
@@ -116,7 +146,8 @@ const TelemedicineSession = () => {
             color: "white",
             border: "none",
             padding: "10px 16px",
-            borderRadius: "6px"
+            borderRadius: "6px",
+            cursor: "pointer"
           }}
         >
           Generate Prescription
@@ -128,7 +159,8 @@ const TelemedicineSession = () => {
             color: "white",
             border: "none",
             padding: "10px 16px",
-            borderRadius: "6px"
+            borderRadius: "6px",
+            cursor: "pointer"
           }}
         >
           Refer to Hospital
@@ -140,7 +172,8 @@ const TelemedicineSession = () => {
             color: "white",
             border: "none",
             padding: "10px 16px",
-            borderRadius: "6px"
+            borderRadius: "6px",
+            cursor: "pointer"
           }}
         >
           End Consultation
