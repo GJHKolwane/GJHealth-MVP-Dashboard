@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import PhotoUpload from "./PhotoUpload";
+import SpeechInput from "./SpeechInput";
 import { translateText } from "../../services/translationService";
 
 const ConsultationChat = () => {
@@ -7,22 +8,28 @@ const ConsultationChat = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
 
-  const sendMessage = async () => {
+  const sendMessage = async (text = input) => {
 
-    if (!input.trim()) return;
+    if (!text.trim()) return;
 
-    const translated = await translateText(input, "en");
+    const translated = await translateText(text, "en");
 
     const newMessage = {
       id: Date.now(),
       sender: "Nurse",
-      original: input,
+      original: text,
       translated
     };
 
     setMessages([...messages, newMessage]);
 
     setInput("");
+
+  };
+
+  const handleSpeech = (speechText) => {
+
+    setInput(speechText);
 
   };
 
@@ -47,12 +54,6 @@ const ConsultationChat = () => {
           marginBottom: "10px"
         }}
       >
-
-        {messages.length === 0 && (
-          <p style={{ color: "#6b7280" }}>
-            No messages yet
-          </p>
-        )}
 
         {messages.map(msg => (
 
@@ -102,7 +103,7 @@ const ConsultationChat = () => {
         />
 
         <button
-          onClick={sendMessage}
+          onClick={() => sendMessage()}
           style={{
             background: "#2563eb",
             color: "white",
@@ -114,6 +115,8 @@ const ConsultationChat = () => {
         >
           Send
         </button>
+
+        <SpeechInput onResult={handleSpeech} />
 
       </div>
 
