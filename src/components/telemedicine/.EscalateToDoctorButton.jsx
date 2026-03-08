@@ -1,69 +1,42 @@
-import React, { useState } from "react";
+import React from "react";
+import { routeDoctor } from "../../services/doctorRoutingService";
 
-export default function EscalateToDoctorButton({ consultationId, soan }) {
+const EscalateDoctorButton = ({ consultationId, soan }) => {
 
-  const [loading, setLoading] = useState(false);
-    const [status, setStatus] = useState("");
+  const handleEscalation = async () => {
 
-      const escalate = async () => {
+    const result = await routeDoctor(consultationId, soan);
 
-          try {
+    if (result.status === "ROUTED") {
 
-                setLoading(true);
+      alert("Doctor has been notified and consultation request sent.");
 
-                      const response = await fetch("/consultation/escalate", {
-                              method: "POST",
-                                      headers: {
-                                                "Content-Type": "application/json"
-                                                        },
-                                                                body: JSON.stringify({
-                                                                          consultationId,
-                                                                                    soan
-                                                                                            })
-                                                                                                  });
+    } else {
 
-                                                                                                        const data = await response.json();
+      alert("Doctor routing failed. Please try again.");
 
-                                                                                                              if (response.ok) {
-                                                                                                                      setStatus("Doctor has been notified.");
-                                                                                                                            } else {
-                                                                                                                                    setStatus("Escalation failed.");
-                                                                                                                                          }
+    }
 
-                                                                                                                                              } catch (err) {
-                                                                                                                                                    console.error(err);
-                                                                                                                                                          setStatus("Network error.");
-                                                                                                                                                              }
+  };
 
-                                                                                                                                                                  setLoading(false);
-                                                                                                                                                                    };
+  return (
 
-                                                                                                                                                                      return (
+    <button
+      onClick={handleEscalation}
+      style={{
+        background: "#f59e0b",
+        color: "white",
+        border: "none",
+        padding: "10px 16px",
+        borderRadius: "6px",
+        cursor: "pointer"
+      }}
+    >
+      Escalate to Doctor
+    </button>
 
-                                                                                                                                                                          <div style={{ marginTop: "10px" }}>
+  );
 
-                                                                                                                                                                                <button
-                                                                                                                                                                                        onClick={escalate}
-                                                                                                                                                                                                disabled={loading}
-                                                                                                                                                                                                        style={{
-                                                                                                                                                                                                                  backgroundColor: "#f59e0b",
-                                                                                                                                                                                                                            color: "white",
-                                                                                                                                                                                                                                      padding: "10px 16px",
-                                                                                                                                                                                                                                                border: "none",
-                                                                                                                                                                                                                                                          borderRadius: "6px",
-                                                                                                                                                                                                                                                                    cursor: "pointer"
-                                                                                                                                                                                                                                                                            }}
-                                                                                                                                                                                                                                                                                  >
-                                                                                                                                                                                                                                                                                          {loading ? "Escalating..." : "Escalate to Doctor"}
-                                                                                                                                                                                                                                                                                                </button>
+};
 
-                                                                                                                                                                                                                                                                                                      {status && (
-                                                                                                                                                                                                                                                                                                              <p style={{ marginTop: "8px", fontSize: "0.9rem" }}>
-                                                                                                                                                                                                                                                                                                                        {status}
-                                                                                                                                                                                                                                                                                                                                </p>
-                                                                                                                                                                                                                                                                                                                                      )}
-
-                                                                                                                                                                                                                                                                                                                                          </div>
-
-                                                                                                                                                                                                                                                                                                                                            );
-                                                                                                                                                                                                                                                                                                                                            }
+export default EscalateDoctorButton;
