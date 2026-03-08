@@ -1,22 +1,27 @@
 import React, { useState } from "react";
 import PhotoUpload from "./PhotoUpload";
+import { translateText } from "../../services/translationService";
 
 const ConsultationChat = () => {
 
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
 
     if (!input.trim()) return;
 
+    const translated = await translateText(input, "en");
+
     const newMessage = {
       id: Date.now(),
-      sender: "Doctor",
-      text: input
+      sender: "Nurse",
+      original: input,
+      translated
     };
 
     setMessages([...messages, newMessage]);
+
     setInput("");
 
   };
@@ -37,7 +42,7 @@ const ConsultationChat = () => {
 
       <div
         style={{
-          height: "180px",
+          height: "200px",
           overflowY: "auto",
           marginBottom: "10px"
         }}
@@ -45,14 +50,31 @@ const ConsultationChat = () => {
 
         {messages.length === 0 && (
           <p style={{ color: "#6b7280" }}>
-            No messages yet.
+            No messages yet
           </p>
         )}
 
         {messages.map(msg => (
 
-          <div key={msg.id} style={{ marginBottom: "8px" }}>
-            <strong>{msg.sender}:</strong> {msg.text}
+          <div key={msg.id} style={{ marginBottom: "10px" }}>
+
+            <strong>{msg.sender}</strong>
+
+            <div>{msg.original}</div>
+
+            {msg.translated !== msg.original && (
+
+              <div
+                style={{
+                  fontSize: "0.85rem",
+                  color: "#2563eb"
+                }}
+              >
+                Translation: {msg.translated}
+              </div>
+
+            )}
+
           </div>
 
         ))}
@@ -94,8 +116,6 @@ const ConsultationChat = () => {
         </button>
 
       </div>
-
-      {/* Photo Upload Section */}
 
       <PhotoUpload />
 
