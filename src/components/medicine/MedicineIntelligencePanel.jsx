@@ -1,13 +1,18 @@
 import { useState, useEffect } from "react";
 
-export default function MedicineIntelligencePanel({ medication, facilityId }) {
+export default function MedicineIntelligencePanel({
+  medication,
+  facilityId
+}) {
 
   const [stock, setStock] = useState(null);
   const [pressure, setPressure] = useState(null);
   const [alternatives, setAlternatives] = useState([]);
   const [regional, setRegional] = useState([]);
+  const [actionMessage, setActionMessage] = useState("");
 
   const BASE_URL = "http://localhost:8086/internal";
+  const FLOW_URL = "http://localhost:8082/decide";
 
   useEffect(() => {
 
@@ -17,7 +22,7 @@ export default function MedicineIntelligencePanel({ medication, facilityId }) {
 
       try {
 
-        // Stock
+        // Facility stock
         const stockRes = await fetch(
           `${BASE_URL}/stock?medication=${medication}&facilityId=${facilityId}`
         );
@@ -25,7 +30,7 @@ export default function MedicineIntelligencePanel({ medication, facilityId }) {
         const stockData = await stockRes.json();
         setStock(stockData);
 
-        // Pressure
+        // Pressure index
         const pressureRes = await fetch(
           `${BASE_URL}/pressure?medication=${medication}`
         );
@@ -33,7 +38,7 @@ export default function MedicineIntelligencePanel({ medication, facilityId }) {
         const pressureData = await pressureRes.json();
         setPressure(pressureData);
 
-        // Alternatives
+        // Therapeutic alternatives
         const altRes = await fetch(
           `${BASE_URL}/alternatives?medication=${medication}`
         );
@@ -41,7 +46,7 @@ export default function MedicineIntelligencePanel({ medication, facilityId }) {
         const altData = await altRes.json();
         setAlternatives(altData);
 
-        // Regional supply
+        // Regional availability
         const regionalRes = await fetch(
           `${BASE_URL}/regional?medication=${medication}`
         );
@@ -61,6 +66,59 @@ export default function MedicineIntelligencePanel({ medication, facilityId }) {
 
   }, [medication, facilityId]);
 
+  /**
+   * =====================================
+   * PATIENT FLOW ACTION
+   * =====================================
+   */
+
+  const executeFlowDecision = async (targetFacilityId, mode) => {
+
+    try {
+
+      const res = await fetch(FLOW_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+
+          patientId: "PATIENT-MVP",
+          consultationId: "CONSULT-MVP",
+          prescriptionId: "RX-MVP",
+
+          isNcdPatient: false,
+
+          collectionMode: mode, // TRANSFER or COLLECT
+
+          targetFacilityId
+
+        })
+      });
+
+      const result = await res.json();
+
+      if (result.status === "ORDER_PLACED") {
+
+        setActionMessage(
+          `Order placed for facility ${targetFacilityId}`
+        );
+
+      } else {
+
+        setActionMessage("Flow decision failed");
+
+      }
+
+    } catch (err) {
+
+      console.error("Flow execution failed", err);
+      setActionMessage("Patient flow service unavailable");
+
+    }
+
+  };
+
   return (
 
     <div
@@ -78,27 +136,25 @@ export default function MedicineIntelligencePanel({ medication, facilityId }) {
         <p>Select medication to view intelligence</p>
       )}
 
+      {/* STOCK */}
+
       {stock && (
 
         <div>
 
           <h4>Facility Stock</h4>
 
-          <p>
-            <b>Medication:</b> {stock.medication}
-          </p>
+          <p><b>Medication:</b> {stock.medication}</p>
 
-          <p>
-            <b>Remaining Stock:</b> {stock.remainingStock}
-          </p>
+          <p><b>Remaining Stock:</b> {stock.remainingStock}</p>
 
-          <p>
-            <b>Reorder Level:</b> {stock.reorderLevel}
-          </p>
+          <p><b>Reorder Level:</b> {stock.reorderLevel}</p>
 
         </div>
 
       )}
+
+      {/* PRESSURE */}
 
       {pressure && (
 
@@ -106,17 +162,15 @@ export default function MedicineIntelligencePanel({ medication, facilityId }) {
 
           <h4>Pressure Index</h4>
 
-          <p>
-            {pressure?.pressurePercent?.toFixed(1) ?? "N/A"}%
-          </p>
+          <p>{pressure?.pressurePercent?.toFixed(1) ?? "N/A"}%</p>
 
-          <p>
-            Status: {pressure?.status ?? "Unknown"}
-          </p>
+          <p>Status: {pressure?.status ?? "Unknown"}</p>
 
         </div>
 
       )}
+
+      {/* ALTERNATIVES */}
 
       {alternatives.length > 0 && (
 
@@ -127,11 +181,7 @@ export default function MedicineIntelligencePanel({ medication, facilityId }) {
           <ul>
 
             {alternatives.map((alt, i) => (
-
-              <li key={i}>
-                {alt.genericName}
-              </li>
-
+              <li key={i}>{alt.genericName}</li>
             ))}
 
           </ul>
@@ -139,6 +189,8 @@ export default function MedicineIntelligencePanel({ medication, facilityId }) {
         </div>
 
       )}
+
+      {/* REGIONAL SUPPLY */}
 
       {regional.length > 0 && (
 
@@ -154,6 +206,7 @@ export default function MedicineIntelligencePanel({ medication, facilityId }) {
                 <th>Facility</th>
                 <th>Region</th>
                 <th>Stock</th>
+                <th>Action</th>
               </tr>
 
             </thead>
@@ -170,6 +223,39 @@ export default function MedicineIntelligencePanel({ medication, facilityId }) {
 
                   <td>{facility.availableUnits}</td>
 
+                  <td>
+
+                    <button
+                      onClick={() =>
+                        executeFlowDecision(
+                          facility.facilityId,
+                          "TRANSFER"
+                        )
+                      }
+                      style={{
+                        marginRight: "6px",
+                        padding: "4px 8px"
+                      }}
+                    >
+                      Request Transfer
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        executeFlowDecision(
+                          facility.facilityId,
+                          "COLLECT"
+                        )
+                      }
+                      style={{
+                        padding: "4px 8px"
+                      }}
+                    >
+                      Patient Collect
+                    </button>
+
+                  </td>
+
                 </tr>
 
               ))}
@@ -182,8 +268,16 @@ export default function MedicineIntelligencePanel({ medication, facilityId }) {
 
       )}
 
+      {actionMessage && (
+
+        <p style={{ marginTop: "10px", color: "green" }}>
+          {actionMessage}
+        </p>
+
+      )}
+
     </div>
 
   );
 
-          }
+        }
