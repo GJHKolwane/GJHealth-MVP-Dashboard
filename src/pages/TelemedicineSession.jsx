@@ -7,11 +7,18 @@ import VideoConsultationPanel from "../components/telemedicine/VideoConsultation
 import ConsultationChat from "../components/telemedicine/ConsultationChat";
 import EscalateDoctorButton from "../components/telemedicine/EscalateDoctorButton";
 
+import PrescriptionPanel from "../components/medicine/PrescriptionPanel";
+import MedicineIntelligencePanel from "../components/medicine/MedicineIntelligencePanel";
+
 const TelemedicineSession = () => {
 
   const { consultationId } = useParams();
 
   const [mode, setMode] = useState("VIDEO");
+
+  const [selectedMedication, setSelectedMedication] = useState(null);
+
+  const facilityId = "FAC-001";
 
   const soanReport = {
     subjective: "Patient reports fever and headache",
@@ -26,11 +33,7 @@ const TelemedicineSession = () => {
 
       <h2>Telemedicine Consultation</h2>
 
-      {/* Connection Quality Indicator */}
-
       <ConnectionStatus />
-
-      {/* Adaptive bandwidth system */}
 
       <AdaptiveModeManager onModeChange={setMode} />
 
@@ -38,7 +41,7 @@ const TelemedicineSession = () => {
         Consultation ID: <strong>{consultationId}</strong>
       </p>
 
-      {/* VIDEO / AUDIO / TEXT PANEL */}
+      {/* VIDEO / AUDIO / TEXT CONSULTATION */}
 
       <VideoConsultationPanel mode={mode} />
 
@@ -46,25 +49,21 @@ const TelemedicineSession = () => {
 
       <ConsultationChat />
 
-      {/* CLINICAL ACTION BUTTONS */}
+      {/* CLINICAL ACTIONS */}
 
       <div
         style={{
-          marginTop: "25px",
+          marginTop: "20px",
           display: "flex",
-          gap: "12px",
+          gap: "10px",
           flexWrap: "wrap"
         }}
       >
-
-        {/* Escalate to Doctor */}
 
         <EscalateDoctorButton
           consultationId={consultationId}
           soan={soanReport}
         />
-
-        {/* Prescription */}
 
         <button
           style={{
@@ -79,8 +78,6 @@ const TelemedicineSession = () => {
           Generate Prescription
         </button>
 
-        {/* Transfer */}
-
         <button
           style={{
             background: "#2563eb",
@@ -93,8 +90,6 @@ const TelemedicineSession = () => {
         >
           Refer to Hospital
         </button>
-
-        {/* End Consultation */}
 
         <button
           style={{
@@ -110,6 +105,21 @@ const TelemedicineSession = () => {
         </button>
 
       </div>
+
+      {/* PRESCRIPTION PANEL */}
+
+      <PrescriptionPanel
+        clinicianRole="nurse"
+        facilityId={facilityId}
+        onMedicationChange={setSelectedMedication}
+      />
+
+      {/* MEDICINE INTELLIGENCE */}
+
+      <MedicineIntelligencePanel
+        medication={selectedMedication}
+        facilityId={facilityId}
+      />
 
     </div>
 
