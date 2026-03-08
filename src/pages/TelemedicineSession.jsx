@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import ConnectionStatus from "../components/telemedicine/ConnectionStatus";
-import ConsultationChat from "../components/telemedicine/ConsultationChat";
 import AdaptiveModeManager from "../components/telemedicine/AdaptiveModeManager";
+import VideoConsultationPanel from "../components/telemedicine/VideoConsultationPanel";
+import ConsultationChat from "../components/telemedicine/ConsultationChat";
 import EscalateDoctorButton from "../components/telemedicine/EscalateDoctorButton";
 
 const TelemedicineSession = () => {
@@ -25,106 +26,27 @@ const TelemedicineSession = () => {
 
       <h2>Telemedicine Consultation</h2>
 
-      {/* Connection Status */}
+      {/* Connection Quality Indicator */}
+
       <ConnectionStatus />
 
-      {/* Adaptive Mode Manager */}
+      {/* Adaptive bandwidth system */}
+
       <AdaptiveModeManager onModeChange={setMode} />
 
       <p>
         Consultation ID: <strong>{consultationId}</strong>
       </p>
 
-      {/* VIDEO MODE */}
+      {/* VIDEO / AUDIO / TEXT PANEL */}
 
-      {mode === "VIDEO" && (
+      <VideoConsultationPanel mode={mode} />
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "2fr 1fr",
-            gap: "20px",
-            marginTop: "20px"
-          }}
-        >
-
-          {/* Patient Video */}
-
-          <div
-            style={{
-              background: "#111827",
-              color: "white",
-              height: "350px",
-              borderRadius: "10px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
-            Patient Video Feed
-          </div>
-
-          {/* Nurse Video */}
-
-          <div
-            style={{
-              background: "#374151",
-              color: "white",
-              height: "350px",
-              borderRadius: "10px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
-            Nurse Video Feed
-          </div>
-
-        </div>
-
-      )}
-
-      {/* AUDIO MODE */}
-
-      {mode === "AUDIO" && (
-
-        <div
-          style={{
-            marginTop: "20px",
-            padding: "20px",
-            background: "#111827",
-            color: "white",
-            borderRadius: "10px"
-          }}
-        >
-          Audio Consultation Active
-        </div>
-
-      )}
-
-      {/* TEXT MODE */}
-
-      {mode === "TEXT" && (
-
-        <div
-          style={{
-            marginTop: "20px",
-            padding: "20px",
-            background: "#111827",
-            color: "white",
-            borderRadius: "10px"
-          }}
-        >
-          Low Bandwidth Mode (Text + Images)
-        </div>
-
-      )}
-
-      {/* Chat Section */}
+      {/* CHAT PANEL */}
 
       <ConsultationChat />
 
-      {/* Control Buttons */}
+      {/* CLINICAL ACTION BUTTONS */}
 
       <div
         style={{
@@ -135,10 +57,14 @@ const TelemedicineSession = () => {
         }}
       >
 
+        {/* Escalate to Doctor */}
+
         <EscalateDoctorButton
           consultationId={consultationId}
           soan={soanReport}
         />
+
+        {/* Prescription */}
 
         <button
           style={{
@@ -153,6 +79,8 @@ const TelemedicineSession = () => {
           Generate Prescription
         </button>
 
+        {/* Transfer */}
+
         <button
           style={{
             background: "#2563eb",
@@ -165,6 +93,8 @@ const TelemedicineSession = () => {
         >
           Refer to Hospital
         </button>
+
+        {/* End Consultation */}
 
         <button
           style={{
