@@ -1,65 +1,29 @@
 import React from "react";
-import Sidebar from "../components/Sidebar";
-import Header from "../components/Header";
+import DoctorRoutingListener from "../components/telemedicine/DoctorRoutingListener";
 
 const DashboardPage = () => {
 
   return (
 
-      <div className="app-container">
+    <div style={{ padding: "20px" }}>
 
-            <Sidebar />
+      <h1>GJHealth Doctor Dashboard</h1>
 
-                  <div className="dashboard-container">
+      <p>
+        Welcome to the GJHealth Clinical Command Interface.
+      </p>
 
-                          <Header />
+      <p>
+        The system will automatically alert you when a nurse escalates a case.
+      </p>
 
-                                  <div className="cards">
+      {/* Doctor escalation listener */}
+      <DoctorRoutingListener />
 
-                                            <div className="card">
-                                                        <h3>Total Patients</h3>
-                                                                    <p>124</p>
-                                                                              </div>
+    </div>
 
-                                                                                        <div className="card">
-                                                                                                    <h3>Today's Consultations</h3>
-                                                                                                                <p>16</p>
-                                                                                                                          </div>
+  );
 
-                                                                                                                                    <div className="card">
-                                                                                                                                                <h3>Alerts</h3>
-                                                                                                                                                            <p>3</p>
-                                                                                                                                                                      </div>
+};
 
-                                                                                                                                                                                <div className="card">
-                                                                                                                                                                                            <h3>Pending Reviews</h3>
-                                                                                                                                                                                                        <p>7</p>
-                                                                                                                                                                                                                  </div>
-
-                                                                                                                                                                                                                          </div>
-
-                                                                                                                                                                                                                                  {/* Medicine Monitoring Panel */}
-
-                                                                                                                                                                                                                                          <div className="cards">
-
-                                                                                                                                                                                                                                                    <div className="card">
-                                                                                                                                                                                                                                                                <h3>Medicine Availability</h3>
-                                                                                                                                                                                                                                                                            <p>Tracked Medicines: 320</p>
-                                                                                                                                                                                                                                                                                      </div>
-
-                                                                                                                                                                                                                                                                                                <div className="card">
-                                                                                                                                                                                                                                                                                                            <h3>Low Stock Alerts</h3>
-                                                                                                                                                                                                                                                                                                                        <p>6</p>
-                                                                                                                                                                                                                                                                                                                                  </div>
-
-                                                                                                                                                                                                                                                                                                                                          </div>
-
-                                                                                                                                                                                                                                                                                                                                                </div>
-
-                                                                                                                                                                                                                                                                                                                                                    </div>
-
-                                                                                                                                                                                                                                                                                                                                                      );
-
-                                                                                                                                                                                                                                                                                                                                                      };
-
-                                                                                                                                                                                                                                                                                                                                                      export default DashboardPage;
+export default DashboardPage;
