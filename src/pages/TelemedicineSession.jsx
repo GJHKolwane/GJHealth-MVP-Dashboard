@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import ConnectionStatus from "../components/telemedicine/ConnectionStatus";
 import ConsultationChat from "../components/telemedicine/ConsultationChat";
+import AdaptiveModeManager from "../components/telemedicine/AdaptiveModeManager";
 
 const TelemedicineSession = () => {
 
   const { consultationId } = useParams();
+
+  const [mode, setMode] = useState("VIDEO");
 
   return (
 
@@ -14,112 +17,90 @@ const TelemedicineSession = () => {
 
       <h2>Telemedicine Consultation</h2>
 
-      {/* Connection Quality Indicator */}
       <ConnectionStatus />
+
+      <AdaptiveModeManager onModeChange={setMode} />
 
       <p>
         Consultation ID: <strong>{consultationId}</strong>
       </p>
 
-      {/* VIDEO LAYOUT */}
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "2fr 1fr",
-          gap: "20px",
-          marginTop: "20px"
-        }}
-      >
-
-        {/* Patient Video (largest) */}
+      {mode === "VIDEO" && (
 
         <div
           style={{
+            display: "grid",
+            gridTemplateColumns: "2fr 1fr",
+            gap: "20px",
+            marginTop: "20px"
+          }}
+        >
+
+          <div
+            style={{
+              background: "#111827",
+              color: "white",
+              height: "350px",
+              borderRadius: "10px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            Patient Video Feed
+          </div>
+
+          <div
+            style={{
+              background: "#374151",
+              color: "white",
+              height: "350px",
+              borderRadius: "10px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            Nurse Video Feed
+          </div>
+
+        </div>
+
+      )}
+
+      {mode === "AUDIO" && (
+
+        <div
+          style={{
+            marginTop: "20px",
+            padding: "20px",
             background: "#111827",
             color: "white",
-            height: "350px",
-            borderRadius: "10px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center"
+            borderRadius: "10px"
           }}
         >
-          Patient Video Feed
+          Audio Consultation Active
         </div>
 
-        {/* Nurse Video */}
+      )}
+
+      {mode === "TEXT" && (
 
         <div
           style={{
-            background: "#374151",
+            marginTop: "20px",
+            padding: "20px",
+            background: "#111827",
             color: "white",
-            height: "350px",
-            borderRadius: "10px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center"
+            borderRadius: "10px"
           }}
         >
-          Nurse Video Feed
+          Low Bandwidth Mode (Text + Images)
         </div>
 
-      </div>
-
-      {/* Doctor Video */}
-
-      <div
-        style={{
-          background: "#1f2937",
-          color: "white",
-          height: "120px",
-          marginTop: "20px",
-          borderRadius: "10px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center"
-        }}
-      >
-        Doctor Video Feed
-      </div>
-
-      {/* SOAN PANEL */}
-
-      <div
-        style={{
-          marginTop: "25px",
-          background: "white",
-          padding: "20px",
-          borderRadius: "10px",
-          border: "1px solid #e5e7eb"
-        }}
-      >
-
-        <h3>SOAN Summary</h3>
-
-        <p>
-          <strong>Subjective:</strong> Patient reports fever and headache.
-        </p>
-
-        <p>
-          <strong>Objective:</strong> Temperature 38.4°C.
-        </p>
-
-        <p>
-          <strong>Assessment:</strong> Nurse + AI suggest possible infection.
-        </p>
-
-        <p>
-          <strong>Next Steps:</strong> Doctor to evaluate and prescribe treatment.
-        </p>
-
-      </div>
-
-      {/* LOW BANDWIDTH CHAT FALLBACK */}
+      )}
 
       <ConsultationChat />
-
-      {/* CONSULTATION CONTROLS */}
 
       <div
         style={{
@@ -135,8 +116,7 @@ const TelemedicineSession = () => {
             color: "white",
             border: "none",
             padding: "10px 16px",
-            borderRadius: "6px",
-            cursor: "pointer"
+            borderRadius: "6px"
           }}
         >
           Generate Prescription
@@ -148,8 +128,7 @@ const TelemedicineSession = () => {
             color: "white",
             border: "none",
             padding: "10px 16px",
-            borderRadius: "6px",
-            cursor: "pointer"
+            borderRadius: "6px"
           }}
         >
           Refer to Hospital
@@ -161,8 +140,7 @@ const TelemedicineSession = () => {
             color: "white",
             border: "none",
             padding: "10px 16px",
-            borderRadius: "6px",
-            cursor: "pointer"
+            borderRadius: "6px"
           }}
         >
           End Consultation
