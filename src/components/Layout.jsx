@@ -4,29 +4,44 @@ import Sidebar from "./Sidebar";
 
 const Layout = ({ children }) => {
   return (
-      <div>
+      <div
+            style={{
+                    display: "flex",
+                            flexDirection: "column",
+                                    height: "100vh"
+                                          }}
+                                              >
+                                                    
+                                                          {/* Top Header */}
+                                                                <Header />
 
-            <Header />
+                                                                      {/* Main App Area */}
+                                                                            <div
+                                                                                    style={{
+                                                                                              display: "flex",
+                                                                                                        flex: 1,
+                                                                                                                  overflow: "hidden"
+                                                                                                                          }}
+                                                                                                                                >
 
-                  <div style={{ display: "flex" }}>
-                          
-                                  <Sidebar />
+                                                                                                                                        {/* Sidebar */}
+                                                                                                                                                <Sidebar />
 
-                                          <main
-                                                    style={{
-                                                                flex: 1,
-                                                                            padding: "20px",
-                                                                                        backgroundColor: "#f4f7fb",
-                                                                                                    minHeight: "100vh"
-                                                                                                              }}
-                                                                                                                      >
-                                                                                                                                {children}
-                                                                                                                                        </main>
+                                                                                                                                                        {/* Page Content */}
+                                                                                                                                                                <main
+                                                                                                                                                                          style={{
+                                                                                                                                                                                      flex: 1,
+                                                                                                                                                                                                  padding: "24px",
+                                                                                                                                                                                                              backgroundColor: "#f4f7fb",
+                                                                                                                                                                                                                          overflowY: "auto"
+                                                                                                                                                                                                                                    }}
+                                                                                                                                                                                                                                            >
+                                                                                                                                                                                                                                                      {children}
+                                                                                                                                                                                                                                                              </main>
 
-                                                                                                                                              </div>
+                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                          );
+                                                                                                                                                                                                                                                                          };
 
-                                                                                                                                                  </div>
-                                                                                                                                                    );
-                                                                                                                                                    };
-
-                                                                                                                                                    export default Layout;
+                                                                                                                                                                                                                                                                          export default Layout;

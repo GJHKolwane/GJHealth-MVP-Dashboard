@@ -1,0 +1,66 @@
+.clinical-dashboard{
+      padding:25px;
+        max-width:1400px;
+          margin:auto;
+          }
+
+          .dashboard-header{
+            margin-bottom:20px;
+            }
+
+            .dashboard-grid{
+              display:grid;
+                grid-template-columns:2fr 1fr;
+                  gap:25px;
+                  }
+
+                  .dashboard-left{
+                    display:flex;
+                      flex-direction:column;
+                        gap:20px;
+                        }
+
+                        .panel{
+                          background:white;
+                            padding:20px;
+                              border-radius:10px;
+                                box-shadow:0 3px 8px rgba(0,0,0,0.05);
+                                }
+
+                                .consultation-card{
+                                  background:white;
+                                    padding:25px;
+                                      border-radius:10px;
+                                        box-shadow:0 3px 8px rgba(0,0,0,0.05);
+                                        }
+
+                                        .consult-id{
+                                          color:#777;
+                                            margin-bottom:20px;
+                                            }
+
+                                            .consult-section{
+                                              margin-bottom:15px;
+                                              }
+
+                                              .consult-actions{
+                                                display:flex;
+                                                  gap:15px;
+                                                    margin-top:20px;
+                                                    }
+
+                                                    .accept-btn{
+                                                      background:#2ecc71;
+                                                        color:white;
+                                                          border:none;
+                                                            padding:10px 18px;
+                                                              border-radius:6px;
+                                                              }
+
+                                                              .decline-btn{
+                                                                background:#e74c3c;
+                                                                  color:white;
+                                                                    border:none;
+                                                                      padding:10px 18px;
+                                                                        border-radius:6px;
+                                                                        }
