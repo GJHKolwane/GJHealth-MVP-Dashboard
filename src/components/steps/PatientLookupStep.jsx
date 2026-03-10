@@ -1,36 +1,55 @@
 import React, { useState } from "react";
+import { createPatientAndEncounter } from "../../services/clinicalApi";
 
 export default function PatientLookupStep({ nextStep }) {
 
-  const [omang, setOmang] = useState("");
+const [omang, setOmang] = useState("");
+const [loading, setLoading] = useState(false);
 
-    function handleSearch() {
+async function handleSearch() {
 
-        console.log("Searching patient:", omang);
+if (!omang) return;
 
-            nextStep();
+setLoading(true);
 
-              }
+try {
 
-                return (
+  const encounter = await createPatientAndEncounter(omang);
+  localStorage.setItem("currentEncounter", encounter.id);
 
-                    <div>
+    console.log("Encounter started:", encounter);
 
-                          <h3>Patient Identification</h3>
+      nextStep();
 
-                                <input
-                                        type="text"
-                                                placeholder="Enter Omang"
-                                                        value={omang}
-                                                                onChange={(e) => setOmang(e.target.value)}
-                                                                      />
+      } catch (err) {
 
-                                                                            <button onClick={handleSearch}>
-                                                                                    Fetch Patient
-                                                                                          </button>
+        console.error("Patient lookup failed", err);
 
-                                                                                              </div>
+        }
 
-                                                                                                );
+        setLoading(false);
 
-                                                                                                }
+        }
+
+        return (
+
+        <div>
+
+          <h3>Patient Identification</h3>
+
+            <input
+                type="text"
+                    placeholder="Enter Omang"
+                        value={omang}
+                            onChange={(e) => setOmang(e.target.value)}
+                              />
+
+                                <button onClick={handleSearch} disabled={loading}>
+                                    {loading ? "Loading..." : "Fetch Patient"}
+                                      </button>
+
+                                      </div>
+
+                                      );
+
+                                      }
