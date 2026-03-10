@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { createPatientAndEncounter } from "../../services/clinicalApi";
 
 export default function PatientLookupStep({ nextStep }) {
 
@@ -8,48 +7,86 @@ const [loading, setLoading] = useState(false);
 
 async function handleSearch() {
 
-if (!omang) return;
-
 setLoading(true);
 
 try {
 
-  const encounter = await createPatientAndEncounter(omang);
-  localStorage.setItem("currentEncounter", encounter.id);
+const API = "http://localhost:5050";
 
-    console.log("Encounter started:", encounter);
+let patientRes = await fetch(`${API}/patients/search/${omang}`);
 
-      nextStep();
+let patient;
 
-      } catch (err) {
+if (patientRes.status === 404) {
 
-        console.error("Patient lookup failed", err);
+const createRes = await fetch(`${API}/patients`, {
+method: "POST",
+headers: {
+"Content-Type": "application/json"
+},
+body: JSON.stringify({
+name: "Unknown Patient",
+gender: "unknown",
+birthDate: "2000-01-01",
+telecom: []
+})
+});
 
-        }
+patient = await createRes.json();
 
-        setLoading(false);
+} else {
 
-        }
+patient = await patientRes.json();
 
-        return (
+}
 
-        <div>
+const encounterRes = await fetch(`${API}/encounters`, {
+method: "POST",
+headers: {
+"Content-Type": "application/json"
+},
+body: JSON.stringify({
+patientId: patient.id,
+reasonCode: ["General consultation"]
+})
+});
 
-          <h3>Patient Identification</h3>
+const encounter = await encounterRes.json();
 
-            <input
-                type="text"
-                    placeholder="Enter Omang"
-                        value={omang}
-                            onChange={(e) => setOmang(e.target.value)}
-                              />
+localStorage.setItem("currentEncounter", encounter.id);
 
-                                <button onClick={handleSearch} disabled={loading}>
-                                    {loading ? "Loading..." : "Fetch Patient"}
-                                      </button>
+nextStep();
 
-                                      </div>
+} catch (err) {
 
-                                      );
+console.error(err);
+alert("Patient intake failed");
 
-                                      }
+}
+
+setLoading(false);
+
+}
+
+return (
+
+<div>
+
+<h3>Patient Identification</h3>
+
+<input
+type="text"
+placeholder="Enter Omang"
+value={omang}
+onChange={(e) => setOmang(e.target.value)}
+/>
+
+<button onClick={handleSearch}>
+{loading ? "Processing..." : "Fetch Patient"}
+</button>
+
+</div>
+
+);
+
+}
