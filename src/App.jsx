@@ -17,91 +17,102 @@ import TelemedicineSession from "./pages/TelemedicineSession";
 import ClinicalCasePage from "./pages/ClinicalCasePage";
 
 function App() {
+
   return (
-      <Router>
 
-            <Routes>
+    <Router>
 
-                    {/* Login */}
-                            <Route path="/" element={<LoginPage />} />
+      <Routes>
 
-                                    {/* Main Layout Routes */}
-                                            <Route
-                                                      path="/dashboard"
-                                                                element={
-                                                                            <Layout>
-                                                                                          <DashboardPage />
-                                                                                                      </Layout>
-                                                                                                                }
-                                                                                                                        />
+        {/* Login */}
+        <Route path="/" element={<LoginPage />} />
 
-                                                                                                                                <Route
-                                                                                                                                          path="/clinical"
-                                                                                                                                                    element={
-                                                                                                                                                                <Layout>
-                                                                                                                                                                              <ClinicalDashboard />
-                                                                                                                                                                                          </Layout>
-                                                                                                                                                                                                    }
-                                                                                                                                                                                                            />
+        {/* Dashboard */}
+        <Route
+          path="/dashboard"
+          element={
+            <Layout>
+              <DashboardPage />
+            </Layout>
+          }
+        />
 
-                                                                                                                                                                                                                    <Route
-                                                                                                                                                                                                                              path="/medicine"
-                                                                                                                                                                                                                                        element={
-                                                                                                                                                                                                                                                    <Layout>
-                                                                                                                                                                                                                                                                  <MedicineDashboard />
-                                                                                                                                                                                                                                                                              </Layout>
-                                                                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                                                                                />
+        {/* Clinical Intelligence */}
+        <Route
+          path="/clinical"
+          element={
+            <Layout>
+              <ClinicalDashboard />
+            </Layout>
+          }
+        />
 
-                                                                                                                                                                                                                                                                                                        <Route
-                                                                                                                                                                                                                                                                                                                  path="/rural-nurse"
-                                                                                                                                                                                                                                                                                                                            element={
-                                                                                                                                                                                                                                                                                                                                        <Layout>
-                                                                                                                                                                                                                                                                                                                                                      <RuralNurseDashboard />
-                                                                                                                                                                                                                                                                                                                                                                  </Layout>
-                                                                                                                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                                                                                                                                    />
+        {/* Medicine Supply */}
+        <Route
+          path="/medicine"
+          element={
+            <Layout>
+              <MedicineDashboard />
+            </Layout>
+          }
+        />
 
-                                                                                                                                                                                                                                                                                                                                                                                            <Route
-                                                                                                                                                                                                                                                                                                                                                                                                      path="/urban-nurse"
-                                                                                                                                                                                                                                                                                                                                                                                                                element={
-                                                                                                                                                                                                                                                                                                                                                                                                                            <Layout>
-                                                                                                                                                                                                                                                                                                                                                                                                                                          <UrbanNurseDashboard />
-                                                                                                                                                                                                                                                                                                                                                                                                                                                      </Layout>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                        />
+        {/* Rural Nurse Workflow */}
+        <Route
+          path="/rural-nurse"
+          element={
+            <Layout>
+              <RuralNurseDashboard />
+            </Layout>
+          }
+        />
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <Route
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          path="/admin"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    element={
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <Layout>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              <AdminDashboard />
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          </Layout>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            />
+        {/* Urban Nurse Workflow */}
+        <Route
+          path="/urban-nurse"
+          element={
+            <Layout>
+              <UrbanNurseDashboard />
+            </Layout>
+          }
+        />
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <Route
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              path="/telemedicine"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        element={
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <Layout>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  <TelemedicineSession />
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              </Layout>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                />
+        {/* Admin */}
+        <Route
+          path="/admin"
+          element={
+            <Layout>
+              <AdminDashboard />
+            </Layout>
+          }
+        />
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <Route
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  path="/case"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            element={
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <Layout>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      <ClinicalCasePage />
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </Layout>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    />
+        {/* Telemedicine */}
+        <Route
+          path="/telemedicine"
+          element={
+            <Layout>
+              <TelemedicineSession />
+            </Layout>
+          }
+        />
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          </Routes>
+        {/* Clinical Case */}
+        <Route
+          path="/case"
+          element={
+            <Layout>
+              <ClinicalCasePage />
+            </Layout>
+          }
+        />
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              </Router>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                );
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }
+      </Routes>
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                export default App;
+    </Router>
+
+  );
+
+}
+
+export default App;
