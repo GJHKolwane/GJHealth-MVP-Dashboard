@@ -1,92 +1,53 @@
 import React, { useState } from "react";
+import { startConsultation } from "../../services/clinicalApi";
 
 export default function PatientLookupStep({ nextStep }) {
 
-const [omang, setOmang] = useState("");
-const [loading, setLoading] = useState(false);
+  const [omang, setOmang] = useState("");
+  const [loading, setLoading] = useState(false);
 
-async function handleSearch() {
+  async function handleSearch() {
 
-setLoading(true);
+    setLoading(true);
 
-try {
+    try {
 
-const API = "http://localhost:5050";
+      const result = await startConsultation(omang);
 
-let patientRes = await fetch(`${API}/patients/search/${omang}`);
+      localStorage.setItem("currentEncounter", result.encounterId);
 
-let patient;
+      nextStep();
 
-if (patientRes.status === 404) {
+    } catch (err) {
 
-const createRes = await fetch(`${API}/patients`, {
-method: "POST",
-headers: {
-"Content-Type": "application/json"
-},
-body: JSON.stringify({
-name: "Unknown Patient",
-gender: "unknown",
-birthDate: "2000-01-01",
-telecom: []
-})
-});
+      console.error(err);
+      alert("Patient intake failed");
 
-patient = await createRes.json();
+    }
 
-} else {
+    setLoading(false);
 
-patient = await patientRes.json();
+  }
 
-}
+  return (
 
-const encounterRes = await fetch(`${API}/encounters`, {
-method: "POST",
-headers: {
-"Content-Type": "application/json"
-},
-body: JSON.stringify({
-patientId: patient.id,
-reasonCode: ["General consultation"]
-})
-});
+    <div>
 
-const encounter = await encounterRes.json();
+      <h3>Patient Identification</h3>
 
-localStorage.setItem("currentEncounter", encounter.id);
+      <input
+        type="text"
+        placeholder="Enter Omang"
+        value={omang}
+        onChange={(e) => setOmang(e.target.value)}
+      />
 
-nextStep();
+      <button onClick={handleSearch}>
+        {loading ? "Processing..." : "Fetch Patient"}
+      </button>
 
-} catch (err) {
+    </div>
 
-console.error(err);
-alert("Patient intake failed");
-
-}
-
-setLoading(false);
-
-}
-
-return (
-
-<div>
-
-<h3>Patient Identification</h3>
-
-<input
-type="text"
-placeholder="Enter Omang"
-value={omang}
-onChange={(e) => setOmang(e.target.value)}
-/>
-
-<button onClick={handleSearch}>
-{loading ? "Processing..." : "Fetch Patient"}
-</button>
-
-</div>
-
-);
+  );
 
 }
