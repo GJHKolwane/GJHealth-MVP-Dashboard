@@ -1,199 +1,127 @@
-const API_BASE = "http://localhost:5050";
+const ORCHESTRATOR = "http://localhost:8087";
 
 /*
-PATIENT + ENCOUNTER INITIALIZATION
-
-Used by PatientLookupStep
-Creates patient then opens encounter
+================================================
+PATIENT INTAKE
+================================================
 */
 
-export async function createPatientAndEncounter(omang) {
+export async function startConsultation(omang) {
 
-const patientRes = await fetch("${API_BASE}/patients", {
-method: "POST",
-headers: {
-"Content-Type": "application/json"
-},
-body: JSON.stringify({
-name: omang,
-identifier: omang
-})
-});
+  const res = await fetch(`${ORCHESTRATOR}/clinical/intake`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ omang })
+  });
 
-if (!patientRes.ok) {
-throw new Error("Patient creation failed");
-}
+  if (!res.ok) {
+    throw new Error("Consultation start failed");
+  }
 
-const patient = await patientRes.json();
-
-const encounterRes = await fetch("${API_BASE}/encounters", {
-method: "POST",
-headers: {
-"Content-Type": "application/json"
-},
-body: JSON.stringify({
-patientId: patient.id
-})
-});
-
-if (!encounterRes.ok) {
-throw new Error("Encounter creation failed");
-}
-
-return encounterRes.json();
+  return res.json();
 }
 
 /*
-VITALS RECORDING
-
-Used by NurseAssessmentStep
+================================================
+VITALS
+================================================
 */
 
 export async function recordVitals(encounterId, vitals) {
 
-const res = await fetch("${API_BASE}/encounters/${encounterId}/vitals", {
-method: "POST",
-headers: {
-"Content-Type": "application/json"
-},
-body: JSON.stringify(vitals)
-});
+  const res = await fetch(`${ORCHESTRATOR}/clinical/vitals`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      encounterId,
+      vitals
+    })
+  });
 
-if (!res.ok) {
-throw new Error("Vitals recording failed");
-}
+  if (!res.ok) {
+    throw new Error("Vitals submission failed");
+  }
 
-return res.json();
+  return res.json();
 }
 
 /*
-SYMPTOMS RECORDING
-
-Structured symptoms for AI triage
+================================================
+SYMPTOMS
+================================================
 */
 
 export async function recordSymptoms(encounterId, symptoms) {
 
-const res = await fetch("${API_BASE}/encounters/${encounterId}/symptoms", {
-method: "POST",
-headers: {
-"Content-Type": "application/json"
-},
-body: JSON.stringify(symptoms)
-});
+  const res = await fetch(`${ORCHESTRATOR}/clinical/symptoms`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      encounterId,
+      symptoms
+    })
+  });
 
-if (!res.ok) {
-throw new Error("Symptoms recording failed");
-}
+  if (!res.ok) {
+    throw new Error("Symptoms submission failed");
+  }
 
-return res.json();
+  return res.json();
 }
 
 /*
+================================================
 NURSE NOTES
-
-General nurse observations
+================================================
 */
 
 export async function recordNotes(encounterId, notes) {
 
-const res = await fetch("${API_BASE}/encounters/${encounterId}/notes", {
-method: "POST",
-headers: {
-"Content-Type": "application/json"
-},
-body: JSON.stringify({
-notes
-})
-});
+  const res = await fetch(`${ORCHESTRATOR}/clinical/notes`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      encounterId,
+      notes
+    })
+  });
 
-if (!res.ok) {
-throw new Error("Notes recording failed");
-}
+  if (!res.ok) {
+    throw new Error("Notes submission failed");
+  }
 
-return res.json();
-}
-
-/*
-SOAN SUBMISSION
-
-Triggers automatic AI triage
-*/
-
-export async function submitSOAN(encounterId, soan) {
-
-const res = await fetch("${API_BASE}/encounters/${encounterId}/soan", {
-method: "POST",
-headers: {
-"Content-Type": "application/json"
-},
-body: JSON.stringify(soan)
-});
-
-if (!res.ok) {
-throw new Error("SOAN submission failed");
-}
-
-return res.json();
+  return res.json();
 }
 
 /*
-ESCALATE TO DOCTOR
-
-Used when AI triage risk is high
+================================================
+AI TRIAGE
+================================================
 */
 
-export async function escalateCase(encounterId) {
+export async function runAITriage(encounterId) {
 
-const res = await fetch("${API_BASE}/encounters/${encounterId}/escalate", {
-method: "POST"
-});
+  const res = await fetch(`${ORCHESTRATOR}/triage/nurse`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      encounterId
+    })
+  });
 
-if (!res.ok) {
-throw new Error("Escalation failed");
-}
+  if (!res.ok) {
+    throw new Error("AI triage failed");
+  }
 
-return res.json();
-}
-
-/*
-DOCTOR PRESCRIPTION
-
-Doctor issues medication
-*/
-
-export async function submitPrescription(encounterId, prescription) {
-
-const res = await fetch("${API_BASE}/encounters/${encounterId}/prescription", {
-method: "POST",
-headers: {
-"Content-Type": "application/json"
-},
-body: JSON.stringify(prescription)
-});
-
-if (!res.ok) {
-throw new Error("Prescription failed");
-}
-
-return res.json();
-}
-
-/*
-CLOSE ENCOUNTER
-
-Final step of workflow
-*/
-
-export async function closeEncounter(encounterId) {
-
-const res = await fetch("${API_BASE}/encounters/${encounterId}/close", {
-method: "PATCH"
-});
-
-if (!res.ok) {
-throw new Error("Closing encounter failed");
-}
-
-return res.json();
+  return res.json();
 }
