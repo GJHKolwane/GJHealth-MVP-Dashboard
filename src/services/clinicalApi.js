@@ -1,4 +1,12 @@
-const ORCHESTRATOR = "http://localhost:8087";
+/*
+================================================
+API CONFIGURATION
+================================================
+*/
+
+const ORCHESTRATOR =
+  process.env.REACT_APP_ORCHESTRATOR ||
+  "http://localhost:8087";
 
 /*
 ================================================
@@ -17,7 +25,8 @@ export async function startConsultation(omang) {
   });
 
   if (!res.ok) {
-    throw new Error("Consultation start failed");
+    const text = await res.text();
+    throw new Error(`Consultation start failed: ${text}`);
   }
 
   return res.json();
@@ -43,7 +52,8 @@ export async function recordVitals(encounterId, vitals) {
   });
 
   if (!res.ok) {
-    throw new Error("Vitals submission failed");
+    const text = await res.text();
+    throw new Error(`Vitals submission failed: ${text}`);
   }
 
   return res.json();
@@ -69,7 +79,8 @@ export async function recordSymptoms(encounterId, symptoms) {
   });
 
   if (!res.ok) {
-    throw new Error("Symptoms submission failed");
+    const text = await res.text();
+    throw new Error(`Symptoms submission failed: ${text}`);
   }
 
   return res.json();
@@ -95,7 +106,8 @@ export async function recordNotes(encounterId, notes) {
   });
 
   if (!res.ok) {
-    throw new Error("Notes submission failed");
+    const text = await res.text();
+    throw new Error(`Notes submission failed: ${text}`);
   }
 
   return res.json();
@@ -120,8 +132,9 @@ export async function runAITriage(encounterId) {
   });
 
   if (!res.ok) {
-    throw new Error("AI triage failed");
+    const text = await res.text();
+    throw new Error(`AI triage failed: ${text}`);
   }
 
   return res.json();
-}
+                    }
