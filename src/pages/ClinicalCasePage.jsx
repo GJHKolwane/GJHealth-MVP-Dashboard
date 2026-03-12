@@ -7,6 +7,11 @@ import NurseAssessmentStep from "../components/steps/NurseAssessmentStep";
 
 import AIResultsPanel from "../components/triage/AIResultsPanel";
 
+import DoctorConsultationStep from "../components/steps/DoctorConsultationStep";
+import DoctorClinicalNotesStep from "../components/steps/DoctorClinicalNotesStep";
+import DoctorTreatmentDecisionStep from "../components/steps/DoctorTreatmentDecisionStep";
+import DoctorDecisionStep from "../components/steps/DoctorDecisionStep";
+
 export default function ClinicalCasePage() {
 
   const [step, setStep] = useState(0);
@@ -17,7 +22,7 @@ export default function ClinicalCasePage() {
 
   /*
   =====================================================
-  LOAD AI TRIAGE RESULT
+  LOAD AI TRIAGE RESULT FROM STORAGE
   =====================================================
   */
 
@@ -42,20 +47,24 @@ export default function ClinicalCasePage() {
     switch (step) {
 
       /*
-      ==========================================
-      STEP 1
+      =====================================================
+      STEP 0
       Patient Identification
-      ==========================================
+      =====================================================
       */
 
       case 0:
-        return <PatientLookupStep nextStep={nextStep} />;
+        return (
+          <PatientLookupStep
+            nextStep={nextStep}
+          />
+        );
 
       /*
-      ==========================================
-      STEP 2
-      Nurse Clinical Assessment
-      ==========================================
+      =====================================================
+      STEP 1
+      Nurse Assessment
+      =====================================================
       */
 
       case 1:
@@ -67,14 +76,15 @@ export default function ClinicalCasePage() {
         );
 
       /*
-      ==========================================
-      STEP 3
+      =====================================================
+      STEP 2
       AI TRIAGE RESULT
-      ==========================================
+      =====================================================
       */
 
       case 2:
         return (
+
           <div>
 
             <h3>AI Triage Recommendation</h3>
@@ -91,12 +101,73 @@ export default function ClinicalCasePage() {
                 onClick={nextStep}
                 style={{ marginLeft: "10px" }}
               >
-                Continue to Doctor Review
+                Continue to Doctor Consultation
               </button>
 
             </div>
 
           </div>
+
+        );
+
+      /*
+      =====================================================
+      STEP 3
+      Doctor Consultation
+      =====================================================
+      */
+
+      case 3:
+        return (
+          <DoctorConsultationStep
+            nextStep={nextStep}
+            prevStep={prevStep}
+          />
+        );
+
+      /*
+      =====================================================
+      STEP 4
+      Doctor Clinical Notes
+      =====================================================
+      */
+
+      case 4:
+        return (
+          <DoctorClinicalNotesStep
+            nextStep={nextStep}
+            prevStep={prevStep}
+          />
+        );
+
+      /*
+      =====================================================
+      STEP 5
+      Treatment Decision
+      =====================================================
+      */
+
+      case 5:
+        return (
+          <DoctorTreatmentDecisionStep
+            nextStep={nextStep}
+            prevStep={prevStep}
+          />
+        );
+
+      /*
+      =====================================================
+      STEP 6
+      Prescription
+      =====================================================
+      */
+
+      case 6:
+        return (
+          <DoctorDecisionStep
+            nextStep={nextStep}
+            prevStep={prevStep}
+          />
         );
 
       default:
