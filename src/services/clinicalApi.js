@@ -137,4 +137,34 @@ export async function runAITriage(encounterId) {
   }
 
   return res.json();
-                    }
+}
+
+/*
+================================================
+DOCTOR PRESCRIPTION
+================================================
+*/
+
+export async function submitPrescription(encounterId, prescription) {
+
+  const res = await fetch(`${ORCHESTRATOR}/prescribe`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      consultationId: encounterId,
+      facilityId: "FAC-A",
+      medication: prescription.medication,
+      quantity: prescription.quantity,
+      prescriberId: "doctor-demo"
+    })
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Prescription failed: ${text}`);
+  }
+
+  return res.json();
+                             }
