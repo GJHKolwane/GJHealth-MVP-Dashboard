@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import StepWizard from "../components/steps/StepWizard";
 
@@ -7,82 +7,117 @@ import NurseAssessmentStep from "../components/steps/NurseAssessmentStep";
 
 import AIResultsPanel from "../components/triage/AIResultsPanel";
 
-import { submitSOAN } from "../services/clinicalApi";
-
 export default function ClinicalCasePage() {
 
-const [step, setStep] = useState(0);
-const [aiResult, setAiResult] = useState(null);
+  const [step, setStep] = useState(0);
+  const [aiResult, setAiResult] = useState(null);
 
-const nextStep = () => setStep(step + 1);
-const prevStep = () => setStep(step - 1);
+  const nextStep = () => setStep((s) => s + 1);
+  const prevStep = () => setStep((s) => s - 1);
 
-async function handleTriage(notes) {
+  /*
+  =====================================================
+  LOAD AI TRIAGE RESULT
+  =====================================================
+  */
 
-try {
+  useEffect(() => {
 
-  const encounterId = localStorage.getItem("currentEncounter");
+    const stored = localStorage.getItem("aiTriageResult");
 
-    const result = await submitSOAN(encounterId, {
-        subjective: notes,
-            objective: "",
-                assessment: "",
-                    nextSteps: ""
-                      });
+    if (stored) {
+      setAiResult(JSON.parse(stored));
+    }
 
-                        setAiResult({
-                            observations: ["Patient symptoms recorded"],
-                                considerations: [result.triage.aiRecommendation],
-                                    riskLevel: result.triage.riskLevel
-                                      });
+  }, [step]);
 
-                                        nextStep();
+  /*
+  =====================================================
+  STEP CONTROLLER
+  =====================================================
+  */
 
-                                        } catch (err) {
+  function renderStep() {
 
-                                          console.error("Triage failed", err);
+    switch (step) {
 
-                                          }
+      /*
+      ==========================================
+      STEP 1
+      Patient Identification
+      ==========================================
+      */
 
-                                          }
+      case 0:
+        return <PatientLookupStep nextStep={nextStep} />;
 
-                                          function renderStep() {
+      /*
+      ==========================================
+      STEP 2
+      Nurse Clinical Assessment
+      ==========================================
+      */
 
-                                          switch (step) {
+      case 1:
+        return (
+          <NurseAssessmentStep
+            nextStep={nextStep}
+            prevStep={prevStep}
+          />
+        );
 
-                                            case 0:
-                                                return <PatientLookupStep nextStep={nextStep} />;
+      /*
+      ==========================================
+      STEP 3
+      AI TRIAGE RESULT
+      ==========================================
+      */
 
-                                                  case 1:
-                                                      return (
-                                                            <NurseAssessmentStep
-                                                                    nextStep={handleTriage}
-                                                                            prevStep={prevStep}
-                                                                                  />
-                                                                                      );
+      case 2:
+        return (
+          <div>
 
-                                                                                        case 2:
-                                                                                            return <AIResultsPanel result={aiResult} />;
+            <h3>AI Triage Recommendation</h3>
 
-                                                                                              default:
-                                                                                                  return null;
+            <AIResultsPanel result={aiResult} />
 
-                                                                                                  }
+            <div style={{ marginTop: "20px" }}>
 
-                                                                                                  }
+              <button onClick={prevStep}>
+                Back
+              </button>
 
-                                                                                                  return (
+              <button
+                onClick={nextStep}
+                style={{ marginLeft: "10px" }}
+              >
+                Continue to Doctor Review
+              </button>
 
-                                                                                                  <div>
+            </div>
 
-                                                                                                    <h2>Clinical Case</h2>
+          </div>
+        );
 
-                                                                                                      <StepWizard currentStep={step} />
+      default:
+        return null;
 
-                                                                                                        {renderStep()}
+    }
 
-                                                                                                        </div>
+  }
 
-                                                                                                        );
+  return (
 
-                                                                                                        }
+    <div>
+
+      <h2>Clinical Case</h2>
+
+      <StepWizard currentStep={step} />
+
+      {renderStep()}
+
+    </div>
+
+  );
+
+}
