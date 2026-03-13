@@ -8,6 +8,7 @@ import NurseAssessmentStep from "../components/steps/NurseAssessmentStep";
 import AIResultsPanel from "../components/triage/AIResultsPanel";
 
 import NurseDecisionStep from "../components/steps/NurseDecisionStep";
+import ScheduleAppointmentStep from "../components/steps/ScheduleAppointmentStep";
 
 import DoctorConsultationStep from "../components/steps/DoctorConsultationStep";
 import DoctorClinicalNotesStep from "../components/steps/DoctorClinicalNotesStep";
@@ -18,17 +19,10 @@ export default function ClinicalCasePage() {
 
   const [step, setStep] = useState(0);
   const [aiResult, setAiResult] = useState(null);
-
   const [route, setRoute] = useState(null);
 
   const nextStep = () => setStep((s) => s + 1);
   const prevStep = () => setStep((s) => s - 1);
-
-  /*
-  =====================================================
-  LOAD AI TRIAGE RESULT FROM STORAGE
-  =====================================================
-  */
 
   useEffect(() => {
 
@@ -40,36 +34,14 @@ export default function ClinicalCasePage() {
 
   }, []);
 
-  /*
-  =====================================================
-  STEP CONTROLLER
-  =====================================================
-  */
-
   function renderStep() {
 
     switch (step) {
 
-      /*
-      =====================================================
-      STEP 0
-      Patient Identification
-      =====================================================
-      */
-
       case 0:
         return (
-          <PatientLookupStep
-            nextStep={nextStep}
-          />
+          <PatientLookupStep nextStep={nextStep} />
         );
-
-      /*
-      =====================================================
-      STEP 1
-      Nurse Assessment
-      =====================================================
-      */
 
       case 1:
         return (
@@ -78,13 +50,6 @@ export default function ClinicalCasePage() {
             prevStep={prevStep}
           />
         );
-
-      /*
-      =====================================================
-      STEP 2
-      AI TRIAGE RESULT
-      =====================================================
-      */
 
       case 2:
         return (
@@ -101,10 +66,7 @@ export default function ClinicalCasePage() {
                 Back
               </button>
 
-              <button
-                onClick={nextStep}
-                style={{ marginLeft: "10px" }}
-              >
+              <button onClick={nextStep} style={{ marginLeft: "10px" }}>
                 Continue
               </button>
 
@@ -113,13 +75,6 @@ export default function ClinicalCasePage() {
           </div>
 
         );
-
-      /*
-      =====================================================
-      STEP 3
-      NURSE DECISION
-      =====================================================
-      */
 
       case 3:
         return (
@@ -130,66 +85,36 @@ export default function ClinicalCasePage() {
           />
         );
 
-      /*
-      =====================================================
-      STEP 4
-      ROUTING DECISION
-      =====================================================
-      */
-
       case 4:
 
         if (route === "doctor_flow") {
-
           return (
             <DoctorConsultationStep
               nextStep={nextStep}
               prevStep={prevStep}
             />
           );
-
         }
 
         if (route === "nurse_prescription") {
-
           return (
             <DoctorDecisionStep
               nextStep={nextStep}
               prevStep={prevStep}
             />
           );
-
         }
 
         if (route === "schedule_followup") {
-
           return (
-
-            <div>
-
-              <h3>Schedule Follow-Up Appointment</h3>
-
-              <p>
-                Appointment scheduling will be implemented in the next step.
-              </p>
-
-              <button onClick={prevStep}>
-                Back
-              </button>
-
-            </div>
-
+            <ScheduleAppointmentStep
+              nextStep={nextStep}
+              prevStep={prevStep}
+            />
           );
-
         }
 
         return null;
-
-      /*
-      =====================================================
-      DOCTOR FLOW
-      =====================================================
-      */
 
       case 5:
         return (
@@ -236,4 +161,4 @@ export default function ClinicalCasePage() {
 
   );
 
-}
+      }
