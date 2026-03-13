@@ -34,8 +34,13 @@ export default function AIResultsPanel({ result }) {
       </ul>
 
       <p>
-        <strong>Risk Level:</strong>{" "}
+        <strong>AI Suggested Risk Level:</strong>{" "}
         {result.riskLevel || "Unknown"}
+      </p>
+
+      <p style={{ fontSize: "0.9em", marginTop: "10px", color: "#666" }}>
+        This AI output provides clinical support information only. 
+        Final clinical judgment remains the responsibility of the healthcare professional.
       </p>
 
     </div>
