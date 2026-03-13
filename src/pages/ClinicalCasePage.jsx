@@ -7,6 +7,8 @@ import NurseAssessmentStep from "../components/steps/NurseAssessmentStep";
 
 import AIResultsPanel from "../components/triage/AIResultsPanel";
 
+import NurseDecisionStep from "../components/steps/NurseDecisionStep";
+
 import DoctorConsultationStep from "../components/steps/DoctorConsultationStep";
 import DoctorClinicalNotesStep from "../components/steps/DoctorClinicalNotesStep";
 import DoctorTreatmentDecisionStep from "../components/steps/DoctorTreatmentDecisionStep";
@@ -16,6 +18,8 @@ export default function ClinicalCasePage() {
 
   const [step, setStep] = useState(0);
   const [aiResult, setAiResult] = useState(null);
+
+  const [route, setRoute] = useState(null);
 
   const nextStep = () => setStep((s) => s + 1);
   const prevStep = () => setStep((s) => s - 1);
@@ -101,7 +105,7 @@ export default function ClinicalCasePage() {
                 onClick={nextStep}
                 style={{ marginLeft: "10px" }}
               >
-                Continue to Doctor Consultation
+                Continue
               </button>
 
             </div>
@@ -113,26 +117,81 @@ export default function ClinicalCasePage() {
       /*
       =====================================================
       STEP 3
-      Doctor Consultation
+      NURSE DECISION
       =====================================================
       */
 
       case 3:
         return (
-          <DoctorConsultationStep
+          <NurseDecisionStep
             nextStep={nextStep}
             prevStep={prevStep}
+            setRoute={setRoute}
           />
         );
 
       /*
       =====================================================
       STEP 4
-      Doctor Clinical Notes
+      ROUTING DECISION
       =====================================================
       */
 
       case 4:
+
+        if (route === "doctor_flow") {
+
+          return (
+            <DoctorConsultationStep
+              nextStep={nextStep}
+              prevStep={prevStep}
+            />
+          );
+
+        }
+
+        if (route === "nurse_prescription") {
+
+          return (
+            <DoctorDecisionStep
+              nextStep={nextStep}
+              prevStep={prevStep}
+            />
+          );
+
+        }
+
+        if (route === "schedule_followup") {
+
+          return (
+
+            <div>
+
+              <h3>Schedule Follow-Up Appointment</h3>
+
+              <p>
+                Appointment scheduling will be implemented in the next step.
+              </p>
+
+              <button onClick={prevStep}>
+                Back
+              </button>
+
+            </div>
+
+          );
+
+        }
+
+        return null;
+
+      /*
+      =====================================================
+      DOCTOR FLOW
+      =====================================================
+      */
+
+      case 5:
         return (
           <DoctorClinicalNotesStep
             nextStep={nextStep}
@@ -140,14 +199,7 @@ export default function ClinicalCasePage() {
           />
         );
 
-      /*
-      =====================================================
-      STEP 5
-      Treatment Decision
-      =====================================================
-      */
-
-      case 5:
+      case 6:
         return (
           <DoctorTreatmentDecisionStep
             nextStep={nextStep}
@@ -155,14 +207,7 @@ export default function ClinicalCasePage() {
           />
         );
 
-      /*
-      =====================================================
-      STEP 6
-      Prescription
-      =====================================================
-      */
-
-      case 6:
+      case 7:
         return (
           <DoctorDecisionStep
             nextStep={nextStep}
