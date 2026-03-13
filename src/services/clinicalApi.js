@@ -5,8 +5,8 @@ API CONFIGURATION
 */
 
 const ORCHESTRATOR =
-  process.env.REACT_APP_ORCHESTRATOR ||
-  "http://localhost:8087";
+  import.meta.env.VITE_ORCHESTRATOR ||
+    "http://localhost:8087";
 
 /*
 ================================================
