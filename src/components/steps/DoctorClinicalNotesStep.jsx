@@ -4,20 +4,80 @@ export default function DoctorClinicalNotesStep({ nextStep, prevStep }) {
 
   const [assessment, setAssessment] = useState("");
   const [diagnosis, setDiagnosis] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  function handleContinue() {
+  async function handleContinue() {
 
-    const doctorNotes = {
-      assessment,
-      diagnosis
-    };
+    const encounterId = localStorage.getItem("currentEncounter");
 
-    localStorage.setItem(
-      "doctorClinicalNotes",
-      JSON.stringify(doctorNotes)
-    );
+    if (!encounterId) {
+      alert("Encounter not found");
+      return;
+    }
 
-    nextStep();
+    setLoading(true);
+
+    try {
+
+      /*
+      =========================================
+      SEND CLINICAL NOTES TO CASE SERVICE
+      =========================================
+      */
+
+      const consultationNotes =
+        localStorage.getItem("doctorConsultationNotes") || "";
+
+      const response = await fetch(
+        `http://localhost:5050/encounters/${encounterId}/doctor-notes`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            consultationNotes,
+            assessment,
+            diagnosis
+          })
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to record doctor clinical notes");
+      }
+
+      const data = await response.json();
+
+      /*
+      =========================================
+      OFFLINE FALLBACK STORAGE
+      =========================================
+      */
+
+      const doctorNotes = {
+        consultationNotes,
+        assessment,
+        diagnosis
+      };
+
+      localStorage.setItem(
+        "doctorClinicalNotes",
+        JSON.stringify(doctorNotes)
+      );
+
+      nextStep();
+
+    } catch (err) {
+
+      console.error(err);
+
+      alert("Failed to record doctor notes");
+
+    }
+
+    setLoading(false);
+
   }
 
   return (
@@ -55,7 +115,7 @@ export default function DoctorClinicalNotesStep({ nextStep, prevStep }) {
           onClick={handleContinue}
           style={{ marginLeft: "10px" }}
         >
-          Continue
+          {loading ? "Saving..." : "Continue"}
         </button>
 
       </div>
@@ -64,4 +124,4 @@ export default function DoctorClinicalNotesStep({ nextStep, prevStep }) {
 
   );
 
-}
+  }
