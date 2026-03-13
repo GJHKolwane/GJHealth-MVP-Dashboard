@@ -141,6 +141,34 @@ export async function runAITriage(encounterId) {
 
 /*
 ================================================
+FOLLOW-UP APPOINTMENT
+================================================
+*/
+
+export async function scheduleFollowUp(encounterId, appointment) {
+
+  const res = await fetch(`${ORCHESTRATOR}/clinical/followup`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      encounterId,
+      date: appointment.date,
+      reason: appointment.reason
+    })
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Follow-up scheduling failed: ${text}`);
+  }
+
+  return res.json();
+}
+
+/*
+================================================
 TREATMENT DECISION
 ================================================
 */
@@ -168,7 +196,7 @@ export async function recordTreatmentDecision(encounterId, decision) {
 
 /*
 ================================================
-DOCTOR PRESCRIPTION
+PRESCRIPTION
 ================================================
 */
 
