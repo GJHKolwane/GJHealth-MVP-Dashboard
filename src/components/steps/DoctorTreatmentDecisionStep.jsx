@@ -3,15 +3,76 @@ import React, { useState } from "react";
 export default function DoctorTreatmentDecisionStep({ nextStep, prevStep }) {
 
   const [decision, setDecision] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  function handleContinue() {
+  async function handleContinue() {
 
-    localStorage.setItem(
-      "doctorTreatmentDecision",
-      decision
-    );
+    const encounterId = localStorage.getItem("currentEncounter");
 
-    nextStep();
+    if (!encounterId) {
+      alert("Encounter not found");
+      return;
+    }
+
+    if (!decision) {
+      alert("Please select a treatment decision");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+
+      /*
+      =========================================
+      SEND TREATMENT DECISION TO CASE SERVICE
+      =========================================
+      */
+
+      const response = await fetch(
+        `http://localhost:5050/encounters/${encounterId}/treatment-decision`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            decision,
+            treatmentPlan: decision,
+            followUpRequired: false
+          })
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to record treatment decision");
+      }
+
+      const data = await response.json();
+
+      /*
+      =========================================
+      OFFLINE FALLBACK STORAGE
+      =========================================
+      */
+
+      localStorage.setItem(
+        "doctorTreatmentDecision",
+        decision
+      );
+
+      nextStep();
+
+    } catch (err) {
+
+      console.error(err);
+
+      alert("Failed to record treatment decision");
+
+    }
+
+    setLoading(false);
+
   }
 
   return (
@@ -42,7 +103,7 @@ export default function DoctorTreatmentDecisionStep({ nextStep, prevStep }) {
           onClick={handleContinue}
           style={{ marginLeft: "10px" }}
         >
-          Continue
+          {loading ? "Saving..." : "Continue"}
         </button>
 
       </div>
@@ -51,4 +112,4 @@ export default function DoctorTreatmentDecisionStep({ nextStep, prevStep }) {
 
   );
 
-}
+    }
