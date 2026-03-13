@@ -11,9 +11,25 @@ export default function DoctorDecisionStep({ nextStep, prevStep }) {
 
   async function handlePrescription() {
 
+    if (!encounterId) {
+      alert("Encounter not found");
+      return;
+    }
+
+    if (!medication || !quantity) {
+      alert("Medication and quantity are required");
+      return;
+    }
+
     try {
 
       setLoading(true);
+
+      /*
+      =========================================
+      SEND PRESCRIPTION TO BACKEND
+      =========================================
+      */
 
       const decision = await submitPrescription(encounterId, {
         medication,
@@ -21,6 +37,12 @@ export default function DoctorDecisionStep({ nextStep, prevStep }) {
       });
 
       console.log("Prescription decision:", decision);
+
+      /*
+      =========================================
+      OFFLINE FALLBACK STORAGE
+      =========================================
+      */
 
       localStorage.setItem(
         "prescriptionDecision",
@@ -49,7 +71,7 @@ export default function DoctorDecisionStep({ nextStep, prevStep }) {
       <h3>Doctor Clinical Decision</h3>
 
       <p>
-        Review AI recommendation and issue treatment decision.
+        Issue medication based on treatment decision.
       </p>
 
       <h4>Medication</h4>
@@ -88,4 +110,4 @@ export default function DoctorDecisionStep({ nextStep, prevStep }) {
 
   );
 
-        }
+}
