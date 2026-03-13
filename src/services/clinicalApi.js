@@ -141,6 +141,33 @@ export async function runAITriage(encounterId) {
 
 /*
 ================================================
+TREATMENT DECISION
+================================================
+*/
+
+export async function recordTreatmentDecision(encounterId, decision) {
+
+  const res = await fetch(`${ORCHESTRATOR}/clinical/treatment-decision`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      encounterId,
+      decision
+    })
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Treatment decision failed: ${text}`);
+  }
+
+  return res.json();
+}
+
+/*
+================================================
 DOCTOR PRESCRIPTION
 ================================================
 */
@@ -167,4 +194,4 @@ export async function submitPrescription(encounterId, prescription) {
   }
 
   return res.json();
-                             }
+}
