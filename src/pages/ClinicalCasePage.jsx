@@ -34,7 +34,7 @@ export default function ClinicalCasePage() {
       setAiResult(JSON.parse(stored));
     }
 
-  }, [step]);
+  }, []);
 
   /*
   =====================================================
