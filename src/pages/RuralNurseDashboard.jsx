@@ -1,47 +1,12 @@
 import React from "react";
-import { runAITriage, recordVitals } from "../services/clinicalApi";
+import { useNavigate } from "react-router-dom";
 
 const RuralNurseDashboard = () => {
 
-  const encounterId = "demo-encounter"; // temporary test value
+  const navigate = useNavigate();
 
-  const handleVitals = async () => {
-    try {
-
-      const vitals = {
-        temperature: 38.2,
-        pulse: 92,
-        bloodPressure: "120/80"
-      };
-
-      const result = await recordVitals(encounterId, vitals);
-
-      console.log("Vitals stored", result);
-
-      alert("Vitals recorded");
-
-    } catch (err) {
-      console.error(err);
-      alert("Vitals failed");
-    }
-  };
-
-  const handleAITriage = async () => {
-
-    try {
-
-      const result = await runAITriage(encounterId);
-
-      console.log("AI triage result", result);
-
-      alert("AI triage completed");
-
-    } catch (err) {
-
-      console.error(err);
-      alert("AI triage failed");
-
-    }
+  const handlePatientIntake = () => {
+    navigate("/case");
   };
 
   return (
@@ -54,21 +19,20 @@ const RuralNurseDashboard = () => {
 
       <div style={{ marginTop: "20px" }}>
 
-        <div style={{ background: "#fff", padding: "20px", borderRadius: "8px" }}>
+        <div
+          style={{
+            background: "#fff",
+            padding: "20px",
+            borderRadius: "8px"
+          }}
+        >
 
-          <h3>Patient Intake Queue</h3>
+          <h3>Patient Intake</h3>
 
-          <p>Patient: Fever & headache</p>
+          <p>Register or locate patient before consultation</p>
 
-          <button
-            style={{ marginRight: "10px" }}
-            onClick={handleVitals}
-          >
-            Record Vitals
-          </button>
-
-          <button onClick={handleAITriage}>
-            Send to AI Triage
+          <button onClick={handlePatientIntake}>
+            Start Patient Intake
           </button>
 
         </div>
@@ -78,6 +42,7 @@ const RuralNurseDashboard = () => {
     </div>
 
   );
+
 };
 
 export default RuralNurseDashboard;
