@@ -3,15 +3,71 @@ import React, { useState } from "react";
 export default function DoctorConsultationStep({ nextStep, prevStep }) {
 
   const [consultationNotes, setConsultationNotes] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  function handleContinue() {
+  async function handleContinue() {
 
-    localStorage.setItem(
-      "doctorConsultationNotes",
-      consultationNotes
-    );
+    const encounterId = localStorage.getItem("currentEncounter");
 
-    nextStep();
+    if (!encounterId) {
+      alert("Encounter not found");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+
+      /*
+      =========================================
+      SEND TO SHARED CASE STATE
+      =========================================
+      */
+
+      const response = await fetch(
+        `http://localhost:5050/encounters/${encounterId}/doctor-notes`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            consultationNotes,
+            assessment: "",
+            diagnosis: ""
+          })
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Doctor consultation failed");
+      }
+
+      const data = await response.json();
+
+      /*
+      =========================================
+      OFFLINE FALLBACK STORAGE
+      =========================================
+      */
+
+      localStorage.setItem(
+        "doctorConsultationNotes",
+        consultationNotes
+      );
+
+      nextStep();
+
+    } catch (err) {
+
+      console.error(err);
+
+      alert("Failed to record doctor consultation");
+
+    }
+
+    setLoading(false);
+
   }
 
   return (
@@ -42,7 +98,7 @@ export default function DoctorConsultationStep({ nextStep, prevStep }) {
           onClick={handleContinue}
           style={{ marginLeft: "10px" }}
         >
-          Continue
+          {loading ? "Saving..." : "Continue"}
         </button>
 
       </div>
