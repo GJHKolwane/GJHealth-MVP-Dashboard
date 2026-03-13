@@ -8,11 +8,18 @@ export default function PatientLookupStep({ nextStep }) {
 
   async function handleSearch() {
 
+    if (!omang.trim()) {
+      alert("Please enter patient OMANG");
+      return;
+    }
+
     setLoading(true);
 
     try {
 
-      const result = await startConsultation(omang);
+      const result = await startConsultation(omang.trim());
+
+      console.log("Consultation result:", result);
 
       localStorage.setItem("currentEncounter", result.encounterId);
 
@@ -20,12 +27,15 @@ export default function PatientLookupStep({ nextStep }) {
 
     } catch (err) {
 
-      console.error(err);
+      console.error("Patient intake error:", err);
+
       alert("Patient intake failed");
 
-    }
+    } finally {
 
-    setLoading(false);
+      setLoading(false);
+
+    }
 
   }
 
@@ -42,7 +52,10 @@ export default function PatientLookupStep({ nextStep }) {
         onChange={(e) => setOmang(e.target.value)}
       />
 
-      <button onClick={handleSearch}>
+      <button
+        onClick={handleSearch}
+        disabled={loading}
+      >
         {loading ? "Processing..." : "Fetch Patient"}
       </button>
 
