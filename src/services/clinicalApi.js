@@ -4,9 +4,20 @@ API CONFIGURATION
 ================================================
 */
 
+/*
+IMPORTANT:
+In Codespaces, localhost will NOT work from the browser.
+So we read the orchestrator URL from environment variables.
+
+Example .env file:
+
+VITE_ORCHESTRATOR=https://YOUR-CODESPACE-8087.app.github.dev
+*/
+
 const ORCHESTRATOR =
   import.meta.env.VITE_ORCHESTRATOR ||
-    "http://localhost:8087";
+  "https://studious-eureka-97r6r77x6rqr2p4gv-8087.app.github.dev";
+
 
 /*
 ================================================
@@ -31,6 +42,7 @@ export async function startConsultation(omang) {
 
   return res.json();
 }
+
 
 /*
 ================================================
@@ -59,6 +71,7 @@ export async function recordVitals(encounterId, vitals) {
   return res.json();
 }
 
+
 /*
 ================================================
 SYMPTOMS
@@ -85,6 +98,7 @@ export async function recordSymptoms(encounterId, symptoms) {
 
   return res.json();
 }
+
 
 /*
 ================================================
@@ -113,6 +127,7 @@ export async function recordNotes(encounterId, notes) {
   return res.json();
 }
 
+
 /*
 ================================================
 AI TRIAGE
@@ -138,6 +153,7 @@ export async function runAITriage(encounterId) {
 
   return res.json();
 }
+
 
 /*
 ================================================
@@ -167,6 +183,7 @@ export async function scheduleFollowUp(encounterId, appointment) {
   return res.json();
 }
 
+
 /*
 ================================================
 TREATMENT DECISION
@@ -193,6 +210,7 @@ export async function recordTreatmentDecision(encounterId, decision) {
 
   return res.json();
 }
+
 
 /*
 ================================================
