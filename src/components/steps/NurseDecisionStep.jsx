@@ -4,6 +4,9 @@ export default function NurseDecisionStep({ nextStep, prevStep, setRoute }) {
 
   const [decision, setDecision] = useState("");
 
+  const aiResult = JSON.parse(localStorage.getItem("aiTriageResult"));
+  const riskLevel = aiResult?.riskLevel || "UNKNOWN";
+
   function handleContinue() {
 
     if (!decision) {
@@ -31,6 +34,10 @@ export default function NurseDecisionStep({ nextStep, prevStep, setRoute }) {
       setRoute("doctor_flow");
     }
 
+    if (decision === "continue_care") {
+      setRoute("nurse_prescription");
+    }
+
     nextStep();
   }
 
@@ -41,8 +48,11 @@ export default function NurseDecisionStep({ nextStep, prevStep, setRoute }) {
       <h3>Nurse Clinical Decision</h3>
 
       <p>
-        Based on the AI suggested risk level and clinical assessment,
-        select the next action.
+        AI Risk Level: <strong>{riskLevel}</strong>
+      </p>
+
+      <p>
+        Select the next clinical action.
       </p>
 
       <select
@@ -52,17 +62,37 @@ export default function NurseDecisionStep({ nextStep, prevStep, setRoute }) {
 
         <option value="">Select decision</option>
 
-        <option value="treat">
-          Treat Patient (Nurse Prescription)
-        </option>
+        {/* LOW & MEDIUM */}
 
-        <option value="followup">
-          Schedule Follow-Up Appointment
-        </option>
+        {(riskLevel === "LOW" || riskLevel === "MEDIUM") && (
+          <>
+            <option value="treat">
+              Treat Patient (Nurse Prescription)
+            </option>
 
-        <option value="escalate">
-          Escalate to Doctor
-        </option>
+            <option value="followup">
+              Schedule Follow-Up Appointment
+            </option>
+
+            <option value="escalate">
+              Escalate to Doctor
+            </option>
+          </>
+        )}
+
+        {/* HIGH */}
+
+        {riskLevel === "HIGH" && (
+          <>
+            <option value="escalate">
+              Suggested Escalation to Doctor
+            </option>
+
+            <option value="continue_care">
+              Continue Care / Treatment (Rural Override)
+            </option>
+          </>
+        )}
 
       </select>
 
