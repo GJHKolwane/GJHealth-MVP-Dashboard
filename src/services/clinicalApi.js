@@ -4,20 +4,38 @@ API CONFIGURATION
 ================================================
 */
 
-/*
-IMPORTANT:
-In Codespaces, localhost will NOT work from the browser.
-So we read the orchestrator URL from environment variables.
-
-Example .env file:
-
-VITE_ORCHESTRATOR=https://YOUR-CODESPACE-8087.app.github.dev
-*/
-
 const ORCHESTRATOR =
   import.meta.env.VITE_ORCHESTRATOR ||
   "https://studious-eureka-97r6r77x6rqr2p4gv-8087.app.github.dev";
 
+/*
+================================================
+RESPONSE NORMALIZER
+================================================
+Ensures the UI always receives predictable data
+*/
+
+async function handleResponse(res) {
+
+  const data = await res.json();
+
+  if (data?.status === "stored_offline") {
+
+    console.warn("Operation stored offline");
+
+    return {
+      mode: "OFFLINE",
+      data
+    };
+
+  }
+
+  return {
+    mode: "ONLINE",
+    data
+  };
+
+}
 
 /*
 ================================================
@@ -40,9 +58,8 @@ export async function startConsultation(omang) {
     throw new Error(`Consultation start failed: ${text}`);
   }
 
-  return res.json();
+  return handleResponse(res);
 }
-
 
 /*
 ================================================
@@ -68,9 +85,8 @@ export async function recordVitals(encounterId, vitals) {
     throw new Error(`Vitals submission failed: ${text}`);
   }
 
-  return res.json();
+  return handleResponse(res);
 }
-
 
 /*
 ================================================
@@ -96,9 +112,8 @@ export async function recordSymptoms(encounterId, symptoms) {
     throw new Error(`Symptoms submission failed: ${text}`);
   }
 
-  return res.json();
+  return handleResponse(res);
 }
-
 
 /*
 ================================================
@@ -124,9 +139,8 @@ export async function recordNotes(encounterId, notes) {
     throw new Error(`Notes submission failed: ${text}`);
   }
 
-  return res.json();
+  return handleResponse(res);
 }
-
 
 /*
 ================================================
@@ -151,9 +165,8 @@ export async function runAITriage(encounterId) {
     throw new Error(`AI triage failed: ${text}`);
   }
 
-  return res.json();
+  return handleResponse(res);
 }
-
 
 /*
 ================================================
@@ -180,9 +193,8 @@ export async function scheduleFollowUp(encounterId, appointment) {
     throw new Error(`Follow-up scheduling failed: ${text}`);
   }
 
-  return res.json();
+  return handleResponse(res);
 }
-
 
 /*
 ================================================
@@ -208,9 +220,8 @@ export async function recordTreatmentDecision(encounterId, decision) {
     throw new Error(`Treatment decision failed: ${text}`);
   }
 
-  return res.json();
+  return handleResponse(res);
 }
-
 
 /*
 ================================================
@@ -239,5 +250,5 @@ export async function submitPrescription(encounterId, prescription) {
     throw new Error(`Prescription failed: ${text}`);
   }
 
-  return res.json();
+  return handleResponse(res);
 }
