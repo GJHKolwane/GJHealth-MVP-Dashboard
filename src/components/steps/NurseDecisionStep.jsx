@@ -4,8 +4,27 @@ export default function NurseDecisionStep({ nextStep, prevStep, setRoute }) {
 
   const [decision, setDecision] = useState("");
 
-  const aiResult = JSON.parse(localStorage.getItem("aiTriageResult"));
+  /*
+  ============================================
+  LOAD AI RESULT SAFELY
+  ============================================
+  */
+
+  let aiResult = null;
+
+  try {
+    aiResult = JSON.parse(localStorage.getItem("aiTriageResult"));
+  } catch (err) {
+    console.warn("Failed to parse AI triage result", err);
+  }
+
   const riskLevel = aiResult?.riskLevel || "UNKNOWN";
+
+  /*
+  ============================================
+  HANDLE CONTINUE
+  ============================================
+  */
 
   function handleContinue() {
 
@@ -14,12 +33,26 @@ export default function NurseDecisionStep({ nextStep, prevStep, setRoute }) {
       return;
     }
 
+    /*
+    ============================================
+    AUDIT TRAIL
+    ============================================
+    */
+
+    const auditRecord = {
+      decision,
+      riskLevel,
+      timestamp: new Date().toISOString(),
+      source: "NURSE_DECISION"
+    };
+
     localStorage.setItem("nurseDecision", decision);
+    localStorage.setItem("nurseDecisionAudit", JSON.stringify(auditRecord));
 
     /*
-    =====================================
+    ============================================
     ROUTE CONTROL
-    =====================================
+    ============================================
     */
 
     if (decision === "treat") {
@@ -80,7 +113,7 @@ export default function NurseDecisionStep({ nextStep, prevStep, setRoute }) {
           </>
         )}
 
-        {/* HIGH */}
+        {/* HIGH RISK */}
 
         {riskLevel === "HIGH" && (
           <>
