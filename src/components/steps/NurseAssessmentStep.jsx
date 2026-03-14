@@ -20,6 +20,11 @@ export default function NurseAssessmentStep({ nextStep, prevStep }) {
 
   async function handleSubmit() {
 
+    if (!encounterId) {
+      alert("No active encounter found.");
+      return;
+    }
+
     try {
 
       setLoading(true);
@@ -44,6 +49,7 @@ export default function NurseAssessmentStep({ nextStep, prevStep }) {
 
       const symptoms = symptomsText
         .split(",")
+        .filter((s) => s.trim().length > 0)
         .map((s) => ({
           name: s.trim(),
           severity: "unknown",
@@ -67,17 +73,17 @@ export default function NurseAssessmentStep({ nextStep, prevStep }) {
       ================================================
       */
 
-      const triage = await runAITriage(encounterId);
+      const response = await runAITriage(encounterId);
 
       /*
       ================================================
-      STORE RESULT LOCALLY
+      STORE TRIAGE RESULT
       ================================================
       */
 
       localStorage.setItem(
         "aiTriageResult",
-        JSON.stringify(triage)
+        JSON.stringify(response.triage)
       );
 
       nextStep();
@@ -162,4 +168,4 @@ export default function NurseAssessmentStep({ nextStep, prevStep }) {
 
   );
 
-      }
+}
